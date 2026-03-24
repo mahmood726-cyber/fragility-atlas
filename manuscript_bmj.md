@@ -17,13 +17,13 @@ ORCID: [ORCID_PLACEHOLDER]
 
 **Design:** Large-scale multiverse analysis of published systematic reviews.
 
-**Data source:** [N_REVIEWS] Cochrane systematic reviews from the Pairwise70 dataset, each with ≥3 studies in the primary analysis.
+**Data source:** 407 Cochrane systematic reviews from the Pairwise70 dataset, each with ≥3 studies in the primary analysis.
 
-**Main outcome measures:** For each review, we re-analysed the primary outcome across a comprehensive specification grid: 7 between-study variance estimators (fixed-effect, DerSimonian-Laird, REML, Paule-Mandel, Sidik-Jonkman, Hunter-Schmidt, Hedges) × 3 confidence interval methods (Wald, Hartung-Knapp-Sidik-Jonkman, t-distribution) × 3 publication bias corrections (none, trim-and-fill, PET-PEESE) × (k+1) leave-one-out subsets, yielding [TOTAL_SPECS] total specifications. Each specification was classified as agreeing or disagreeing with the reference conclusion (DerSimonian-Laird with Wald CI). Reviews were classified as Robust (≥90% agreement), Moderately Robust (70-89%), Fragile (50-69%), or Unstable (<50%).
+**Main outcome measures:** For each review, we re-analysed the primary outcome across a comprehensive specification grid: 7 between-study variance estimators (fixed-effect, DerSimonian-Laird, REML, Paule-Mandel, Sidik-Jonkman, Hunter-Schmidt, Hedges) × 3 confidence interval methods (Wald, Hartung-Knapp-Sidik-Jonkman, t-distribution) × 3 publication bias corrections (none, trim-and-fill, PET-PEESE) × (k+1) leave-one-out subsets, yielding 399,546 total specifications. Each specification was classified as agreeing or disagreeing with the reference conclusion (DerSimonian-Laird with Wald CI). Reviews were classified as Robust (≥90% agreement), Moderately Robust (70-89%), Fragile (50-69%), or Unstable (<50%).
 
-**Results:** [RESULTS_PARAGRAPH — to be filled after pipeline completes]
+**Results:** Of 407 eligible Cochrane reviews, 87 (21.4%) were classified as Robust, 91 (22.4%) as Moderately Robust, 147 (36.1%) as Fragile, and 82 (20.1%) as Unstable. The mean robustness score was 67.6% (median 66.7%, IQR 56.5-87.2%). The most influential analytical dimension was bias correction (mean eta-squared = 0.361), followed by ci method (eta-squared = 0.036). A total of 399,546 individual meta-analytic specifications were computed across all reviews.
 
-**Conclusions:** [CONCLUSIONS_PARAGRAPH — to be filled after pipeline completes]
+**Conclusions:** In this large-scale multiverse analysis of 407 Cochrane meta-analyses, we found that 56% of reviews had conclusions that were sensitive to reasonable analytical choices. The bias correction dimension was the most influential driver of disagreement. These findings suggest that the conclusions of evidence-based medicine are more contingent on methodological choices than is commonly appreciated, and highlight the importance of conducting sensitivity analyses across multiple analytical dimensions.
 
 ---
 
@@ -35,7 +35,7 @@ The concept of multiverse analysis, introduced by Steegen et al. [2], addresses 
 
 The fragility of meta-analytic conclusions has been examined through several narrower lenses. The Fragility Index [5] quantifies how many events would need to change to alter statistical significance, but only for binary outcomes and only along one dimension (study inclusion). Studies comparing variance estimators [6-8] have shown that different methods can yield substantially different results, particularly with few studies or high heterogeneity. The choice between Wald and Hartung-Knapp-Sidik-Jonkman confidence intervals has been shown to matter considerably [9]. Publication bias corrections can dramatically alter conclusions [10]. However, these dimensions have always been examined in isolation.
 
-We present the Fragility Atlas — a comprehensive multiverse analysis of [N_REVIEWS] Cochrane systematic reviews. For each review, we exhaustively varied five analytical dimensions simultaneously, generating [TOTAL_SPECS] total specifications. This allows us to answer, for the first time at scale: How robust are the conclusions of evidence-based medicine to reasonable methodological variation?
+We present the Fragility Atlas — a comprehensive multiverse analysis of 407 Cochrane systematic reviews. For each review, we exhaustively varied five analytical dimensions simultaneously, generating 399,546 total specifications. This allows us to answer, for the first time at scale: How robust are the conclusions of evidence-based medicine to reasonable methodological variation?
 
 ## Methods
 
@@ -87,7 +87,7 @@ Each eligible review was analysed across five dimensions:
 **5. Total specifications per review:**
 7 × 3 × 3 × (k + 1) = 63 × (k + 1)
 
-For a review with the median k = [MEDIAN_K] studies, this yields [MEDIAN_SPECS] specifications.
+For a review with the median k = 8 studies, this yields 567 specifications.
 
 ### Classification
 
@@ -129,17 +129,17 @@ No patients or members of the public were involved in the design or conduct of t
 
 ### Overview
 
-[N_REVIEWS] Cochrane systematic reviews met inclusion criteria (k ≥ 3 studies). The median number of studies per review was [MEDIAN_K] (IQR [K_Q25]-[K_Q75]; range [K_MIN]-[K_MAX]). [N_RATIO] reviews ([PCT_RATIO]%) used ratio-scale outcomes and [N_DIFF] ([PCT_DIFF]%) used difference-scale outcomes. A total of [TOTAL_SPECS] individual meta-analytic specifications were computed.
+407 Cochrane systematic reviews met inclusion criteria (k ≥ 3 studies). The median number of studies per review was 8 (IQR 5-16; range 3-180). 367 reviews (90.2%) used ratio-scale outcomes and 40 (9.8%) used difference-scale outcomes. A total of 399,546 individual meta-analytic specifications were computed.
 
 ### Distribution of robustness
 
-The mean robustness score was [MEAN_ROBUST]% (median [MEDIAN_ROBUST]%, IQR [Q25_ROBUST]%-[Q75_ROBUST]%). Figure 1 shows the distribution of robustness scores.
+The mean robustness score was 67.6% (median 66.7%, IQR 56.5%-87.2%). Figure 1 shows the distribution of robustness scores.
 
-[N_ROBUST] reviews ([PCT_ROBUST]%) were classified as Robust, [N_MODERATE] ([PCT_MODERATE]%) as Moderately Robust, [N_FRAGILE] ([PCT_FRAGILE]%) as Fragile, and [N_UNSTABLE] ([PCT_UNSTABLE]%) as Unstable (Table 1).
+87 reviews (21.4%) were classified as Robust, 91 (22.4%) as Moderately Robust, 147 (36.1%) as Fragile, and 82 (20.1%) as Unstable (Table 1).
 
 ### Dimension attribution
 
-Across all reviews, the most influential analytical dimension was [TOP_DIM] (mean η² = [TOP_ETA2]), followed by [SECOND_DIM] (η² = [SECOND_ETA2]). Table 2 shows the full dimension attribution.
+Across all reviews, the most influential analytical dimension was Bias Correction (mean η² = 0.361), followed by Ci Method (η² = 0.036). Table 2 shows the full dimension attribution.
 
 ### Predictors of fragility
 

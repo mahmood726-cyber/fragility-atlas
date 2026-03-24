@@ -38,23 +38,45 @@ def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
     # Read dashboard HTML
     html = Path(dashboard_path).read_text(encoding='utf-8')
 
-    # Replace placeholder data blocks
-    # Look for: const SUMMARY_DATA = {...}; or similar patterns
+    # Find and replace data blocks using string search (not regex — avoids backslash issues)
     import re
 
     # Replace SUMMARY_DATA
-    html = re.sub(
-        r'const SUMMARY_DATA\s*=\s*\{[^;]*\};',
-        f'const SUMMARY_DATA = {summary_js};',
-        html, flags=re.DOTALL
-    )
+    match = re.search(r'const SUMMARY_DATA\s*=\s*', html)
+    if match:
+        start = match.start()
+        # Find the matching closing brace + semicolon
+        brace_start = html.index('{', match.end())
+        depth = 0
+        pos = brace_start
+        while pos < len(html):
+            if html[pos] == '{':
+                depth += 1
+            elif html[pos] == '}':
+                depth -= 1
+                if depth == 0:
+                    end = html.index(';', pos) + 1
+                    html = html[:start] + f'const SUMMARY_DATA = {summary_js};' + html[end:]
+                    break
+            pos += 1
 
     # Replace REVIEWS_DATA
-    html = re.sub(
-        r'const REVIEWS_DATA\s*=\s*\[[^;]*\];',
-        f'const REVIEWS_DATA = {reviews_js};',
-        html, flags=re.DOTALL
-    )
+    match = re.search(r'const REVIEWS_DATA\s*=\s*', html)
+    if match:
+        start = match.start()
+        bracket_start = html.index('[', match.end())
+        depth = 0
+        pos = bracket_start
+        while pos < len(html):
+            if html[pos] == '[':
+                depth += 1
+            elif html[pos] == ']':
+                depth -= 1
+                if depth == 0:
+                    end = html.index(';', pos) + 1
+                    html = html[:start] + f'const REVIEWS_DATA = {reviews_js};' + html[end:]
+                    break
+            pos += 1
 
     Path(dashboard_path).write_text(html, encoding='utf-8')
     print(f"Dashboard data embedded: {len(reviews)} reviews, summary with {summary['total_specifications']:,} specs")
