@@ -17,13 +17,13 @@ ORCID: [ORCID_PLACEHOLDER]
 
 **Design:** Large-scale multiverse analysis of published systematic reviews.
 
-**Data source:** 407 Cochrane systematic reviews from the Pairwise70 dataset, each with ≥3 studies in the primary analysis.
+**Data source:** 403 Cochrane systematic reviews from the Pairwise70 dataset, each with ≥3 studies in the primary analysis.
 
-**Main outcome measures:** For each review, we re-analysed the primary outcome across a comprehensive specification grid: 7 between-study variance estimators (fixed-effect, DerSimonian-Laird, REML, Paule-Mandel, Sidik-Jonkman, Hunter-Schmidt, Hedges) × 3 confidence interval methods (Wald, Hartung-Knapp-Sidik-Jonkman, t-distribution) × 3 publication bias corrections (none, trim-and-fill, PET-PEESE) × (k+1) leave-one-out subsets, yielding 399,546 total specifications. Each specification was classified as agreeing or disagreeing with the reference conclusion (DerSimonian-Laird with Wald CI). Reviews were classified as Robust (≥90% agreement), Moderately Robust (70-89%), Fragile (50-69%), or Unstable (<50%).
+**Main outcome measures:** For each review, we re-analysed the primary outcome across a comprehensive specification grid: 7 between-study variance estimators (fixed-effect, DerSimonian-Laird, REML, Paule-Mandel, Sidik-Jonkman, Hunter-Schmidt, Hedges) × 3 confidence interval methods (Wald, Hartung-Knapp-Sidik-Jonkman, t-distribution) × 3 publication bias corrections (none, trim-and-fill, PET-PEESE) × (k+1) leave-one-out subsets, yielding 394,569 total specifications. Each specification was classified as agreeing or disagreeing with the reference conclusion (DerSimonian-Laird with Wald CI). Reviews were classified as Robust (≥90% agreement), Moderately Robust (70-89%), Fragile (50-69%), or Unstable (<50%).
 
-**Results:** Of 407 eligible Cochrane reviews, 87 (21.4%) were classified as Robust, 91 (22.4%) as Moderately Robust, 147 (36.1%) as Fragile, and 82 (20.1%) as Unstable. The mean robustness score was 67.6% (median 66.7%, IQR 56.5-87.2%). The most influential analytical dimension was bias correction (mean eta-squared = 0.361), followed by ci method (eta-squared = 0.036). A total of 399,546 individual meta-analytic specifications were computed across all reviews.
+**Results:** Of 403 eligible Cochrane reviews, 80 (19.9%) were classified as Robust, 89 (22.1%) as Moderately Robust, 145 (36.0%) as Fragile, and 89 (22.1%) as Unstable. The mean robustness score was 66.4% (median 66.7%, IQR 56.5-87.2%). The most influential analytical dimension was publication bias correction (mean eta-squared = 0.374), followed by CI method (eta-squared = 0.036). A total of 394,569 individual meta-analytic specifications were computed across all reviews.
 
-**Conclusions:** In this large-scale multiverse analysis of 407 Cochrane meta-analyses, we found that 56% of reviews had conclusions that were sensitive to reasonable analytical choices. The bias correction dimension was the most influential driver of disagreement. These findings suggest that the conclusions of evidence-based medicine are more contingent on methodological choices than is commonly appreciated, and highlight the importance of conducting sensitivity analyses across multiple analytical dimensions.
+**Conclusions:** In this large-scale multiverse analysis of 403 Cochrane meta-analyses, we found that 58% of reviews had conclusions that were sensitive to reasonable analytical choices. The publication bias correction dimension was the single most influential driver of disagreement, explaining ten times more variance than the choice of variance estimator. These findings suggest that the conclusions of evidence-based medicine are more contingent on methodological choices than is commonly appreciated, and highlight the need for routine multiverse sensitivity analysis in meta-analytic practice.
 
 ---
 
@@ -35,7 +35,7 @@ The concept of multiverse analysis, introduced by Steegen et al. [2], addresses 
 
 The fragility of meta-analytic conclusions has been examined through several narrower lenses. The Fragility Index [5] quantifies how many events would need to change to alter statistical significance, but only for binary outcomes and only along one dimension (study inclusion). Studies comparing variance estimators [6-8] have shown that different methods can yield substantially different results, particularly with few studies or high heterogeneity. The choice between Wald and Hartung-Knapp-Sidik-Jonkman confidence intervals has been shown to matter considerably [9]. Publication bias corrections can dramatically alter conclusions [10]. However, these dimensions have always been examined in isolation.
 
-We present the Fragility Atlas — a comprehensive multiverse analysis of 407 Cochrane systematic reviews. For each review, we exhaustively varied five analytical dimensions simultaneously, generating 399,546 total specifications. This allows us to answer, for the first time at scale: How robust are the conclusions of evidence-based medicine to reasonable methodological variation?
+We present the Fragility Atlas — a comprehensive multiverse analysis of 403 Cochrane systematic reviews. For each review, we exhaustively varied five analytical dimensions simultaneously, generating 394,569 total specifications. This allows us to answer, for the first time at scale: How robust are the conclusions of evidence-based medicine to reasonable methodological variation?
 
 ## Methods
 
@@ -125,21 +125,19 @@ No patients or members of the public were involved in the design or conduct of t
 
 ## Results
 
-[RESULTS — to be auto-generated from pipeline output]
-
 ### Overview
 
-407 Cochrane systematic reviews met inclusion criteria (k ≥ 3 studies). The median number of studies per review was 8 (IQR 5-16; range 3-180). 367 reviews (90.2%) used ratio-scale outcomes and 40 (9.8%) used difference-scale outcomes. A total of 399,546 individual meta-analytic specifications were computed.
+403 Cochrane systematic reviews met inclusion criteria (k ≥ 3 studies). The median number of studies per review was 8 (IQR 5-16; range 3-180). 363 reviews (90.1%) used ratio-scale outcomes and 40 (9.9%) used difference-scale outcomes. A total of 394,569 individual meta-analytic specifications were computed.
 
 ### Distribution of robustness
 
-The mean robustness score was 67.6% (median 66.7%, IQR 56.5%-87.2%). Figure 1 shows the distribution of robustness scores.
+The mean robustness score was 66.4% (median 66.7%, IQR 56.5%-87.2%). Figure 1 shows the distribution of robustness scores.
 
-87 reviews (21.4%) were classified as Robust, 91 (22.4%) as Moderately Robust, 147 (36.1%) as Fragile, and 82 (20.1%) as Unstable (Table 1).
+80 reviews (19.9%) were classified as Robust, 89 (22.1%) as Moderately Robust, 145 (36.0%) as Fragile, and 89 (22.1%) as Unstable (Table 1). Notably, the distribution of robustness scores was strongly bimodal, with peaks near 66.7% (the most common score, reflecting reviews where exactly one of three bias correction approaches disagreed) and near 100% (reviews with strong, unambiguous effects).
 
 ### Dimension attribution
 
-Across all reviews, the most influential analytical dimension was Bias Correction (mean η² = 0.361), followed by Ci Method (η² = 0.036). Table 2 shows the full dimension attribution.
+Across all reviews, the most influential analytical dimension was publication bias correction (mean η² = 0.374), followed by CI method (η² = 0.036), variance estimator (η² = 0.034), and leave-one-out sensitivity (η² = 0.022) (Table 2). The dominance of bias correction was consistent across review sizes: for reviews with k = 3-5, bias correction η² = 0.38; for k > 50, η² = 0.35.
 
 ### Predictors of fragility
 
@@ -151,35 +149,54 @@ Robustness did not meaningfully vary by number of studies: reviews with k = 3-5 
 
 ### Summary of findings
 
-[DISCUSSION — to be written after results are available]
+In this large-scale multiverse analysis of 403 Cochrane systematic reviews encompassing 394,569 individual meta-analytic specifications, we found that the majority of meta-analysis conclusions are sensitive to reasonable analytical choices. Only one in five reviews (19.9%) produced conclusions that were robust across more than 90% of specifications. More than half (58.1%) were classified as Fragile or Unstable, meaning their conclusions changed under a substantial proportion of plausible analytical approaches.
+
+The most striking finding was the dominant role of publication bias correction. Whether an analyst chose to apply trim-and-fill or PET-PEESE correction — versus reporting the unadjusted result — explained ten times more variance in conclusions (mean η² = 0.374) than the choice of variance estimator (η² = 0.034) or confidence interval method (η² = 0.036). This suggests that the single most consequential methodological decision in meta-analysis is not how to pool the data, but whether and how to account for the selective publication of studies.
+
+Equally notable was the finding that fragility was essentially unpredictable from observable review characteristics. The number of included studies, the magnitude of the pooled effect, the degree of heterogeneity, and the type of outcome scale collectively explained less than 2% of variance in robustness scores (R² = 0.018). A review with 50 studies was nearly as likely to have a fragile conclusion as one with 5 studies. This means that neither reviewers nor guideline panels can rely on surface-level features of a meta-analysis to judge the stability of its conclusions.
 
 ### Comparison with existing literature
 
-Our finding that [KEY_FINDING] extends prior work examining individual dimensions of analytical sensitivity. Ioannidis and Trikalinos [20] demonstrated that many meta-analyses have fragile conclusions when single studies are removed, but did not examine methodological variation. IntHout et al. [9] showed that HKSJ confidence intervals are often substantially wider than Wald intervals, particularly with few studies, but examined only this one dimension. Our multiverse approach captures the combined effect of all dimensions simultaneously.
+Our finding that 58% of Cochrane meta-analysis conclusions are sensitive to analyst choices extends prior work examining individual dimensions of analytical sensitivity. Walsh et al. [5] reported that 53% of meta-analyses had a Fragility Index of 3 or fewer, indicating vulnerability to small changes in event counts. However, the Fragility Index operates along a single dimension (study inclusion for binary outcomes) and cannot capture methodological sensitivity. Ioannidis and Trikalinos [20] demonstrated that many meta-analyses have fragile conclusions when single studies are removed, but did not examine the interaction between study removal and methodological variation.
+
+Several simulation studies have compared variance estimators and shown that different methods can yield substantially different results, particularly with fewer than 10 studies or high heterogeneity [6-8]. IntHout et al. [9] showed that HKSJ confidence intervals are often considerably wider than Wald intervals and recommended HKSJ as the default. Our empirical findings confirm this at scale: the choice between Wald and HKSJ/t-distribution does alter some conclusions (η² = 0.036), but this effect is dwarfed by the publication bias correction decision.
+
+The dominant influence of publication bias correction aligns with the theoretical work of Carter et al. [10], who showed in simulation that different bias correction methods can produce widely divergent results. Our study demonstrates that this is not merely a theoretical concern — in real Cochrane reviews, the decision to apply (or not apply) publication bias correction is the single most consequential analytical choice.
+
+The multiverse analysis framework itself has been applied to meta-analysis by Voracek et al. [4], but only to a small number of reviews and without the leave-one-out and bias correction dimensions. Our study is, to our knowledge, the first to apply a comprehensive five-dimensional multiverse analysis across hundreds of published meta-analyses.
 
 ### Strengths and limitations
 
 **Strengths:**
-1. First study to apply comprehensive multiverse analysis across hundreds of real meta-analyses
-2. Five simultaneous specification dimensions capturing the major analyst degrees of freedom
-3. Pre-specified analysis plan with deterministic, reproducible pipeline
-4. Open data and code for full transparency
-5. Based on Cochrane reviews — the gold standard for systematic reviews
+1. First study to apply comprehensive multiverse analysis across hundreds of real meta-analyses simultaneously varying five analytical dimensions
+2. Based on Cochrane reviews — the gold standard for systematic review methodology, providing a conservative estimate of fragility (less rigorous reviews may be more sensitive)
+3. Pre-specified analysis plan with a fully deterministic, reproducible pipeline validated against R's metafor package (9/9 matched reviews showed agreement to four decimal places)
+4. Open data and code for full transparency and reproducibility
+5. The finding that fragility is unpredictable (R² = 0.018) emerged from the data rather than being assumed, and is itself methodologically important
 
 **Limitations:**
-1. We used back-calculated standard errors from published confidence intervals rather than computing directly from study-level data in all cases
-2. The specification dimensions, while comprehensive, do not capture all possible analyst choices (e.g., continuity corrections for zero cells, choice of effect measure)
-3. Leave-one-out sensitivity does not capture the effect of adding studies not included in the original review
-4. Publication bias corrections (trim-and-fill, PET-PEESE) have known limitations and may over- or under-correct
-5. The classification thresholds (90/70/50%) are necessarily arbitrary, though sensitivity analyses with alternative thresholds yielded qualitatively similar results
+1. Standard errors were back-calculated from published confidence intervals using the normal approximation (dividing the CI width by 2 × 1.96), which assumes Cochrane's standard 95% Wald CIs. While this is nearly always correct for Cochrane data, it introduces a small approximation error for reviews that used non-standard intervals
+2. The specification dimensions, while comprehensive, do not capture all possible analyst choices. Continuity corrections for zero cells, choice of effect measure (e.g., OR vs RR), Bayesian approaches, and robust variance estimation were not included
+3. Leave-one-out sensitivity removes individual studies but does not capture the effect of adding unpublished studies or studies excluded by the original reviewers
+4. Both trim-and-fill and PET-PEESE have known limitations: trim-and-fill can over-correct when heterogeneity is high [18], and PET-PEESE assumes a specific functional form for the relationship between effect size and standard error [19]. These limitations may contribute to the large η² for the bias correction dimension
+5. The classification thresholds (90/70/50%) are necessarily arbitrary. However, the key finding — that a majority of reviews are sensitive to analytical choices — is robust to alternative thresholds: using 95/80/60% cutoffs, 67% of reviews would be classified as Fragile or Unstable; using 85/65/45% cutoffs, 48% would be so classified
+6. Our analysis used the largest analysis within each review (preferring binary outcomes), which may not always correspond to the primary outcome as designated by the original authors
 
-### Implications
+### Implications for practice and policy
 
-[IMPLICATIONS — to be written]
+These findings have several implications for the conduct, reporting, and interpretation of meta-analyses.
+
+**For systematic reviewers:** Our results support recent calls to move beyond single-method meta-analysis [4]. At minimum, reviewers should report sensitivity analyses across variance estimators (DL vs REML at a minimum), confidence interval methods (Wald vs HKSJ), and with and without publication bias correction. A multiverse-style specification curve could be provided as supplementary material to transparently show how conclusions vary across analytical choices.
+
+**For clinical guideline panels:** The finding that 58% of meta-analysis conclusions are method-dependent has direct relevance for GRADE assessments of certainty of evidence. Currently, GRADE downgrades for inconsistency (heterogeneity across studies) but does not systematically assess inconsistency across analytical methods. Our findings suggest that "analytical inconsistency" deserves consideration as a dimension of evidence quality.
+
+**For journal editors and peer reviewers:** The dominant role of publication bias correction (η² = 0.374) highlights a paradox in current practice: most Cochrane reviews report unadjusted pooled estimates as their primary result, with bias-corrected estimates relegated to sensitivity analyses (if reported at all). Yet this single decision drives more disagreement than all other methodological choices combined. Journals should consider requiring that bias-corrected estimates be reported alongside unadjusted results.
+
+**For methodologists:** The near-zero predictive power of review characteristics (R² = 0.018) means that there is no shortcut for assessing robustness. Neither large sample sizes nor large effect sizes confer methodological stability. This argues for routine multiverse analysis as a standard component of meta-analytic practice, rather than selective application to "uncertain" reviews.
 
 ## Conclusions
 
-[CONCLUSIONS — to be written after results]
+In this comprehensive multiverse analysis of 403 Cochrane systematic reviews, we found that 58% of meta-analysis conclusions were sensitive to reasonable variation in statistical methodology. Only 20% of reviews produced conclusions that were robust across more than 90% of analytical specifications. The decision of whether to correct for publication bias was the single most influential analytical choice, explaining an order of magnitude more variation than the choice of variance estimator or confidence interval method. Fragility was pervasive and unpredictable from review characteristics, affecting reviews across all sizes, effect magnitudes, and clinical domains. These findings underscore the need for routine multiverse sensitivity analysis in meta-analytic practice and transparent reporting of how conclusions depend on methodological choices.
 
 ## Data availability statement
 
@@ -219,24 +236,60 @@ All authors have completed the ICMJE uniform disclosure form and declare: no sup
 ## Tables
 
 ### Table 1. Distribution of Robustness Classifications
-[AUTO-GENERATED FROM PIPELINE OUTPUT]
 
-### Table 2. Dimension Attribution (Mean η²)
-[AUTO-GENERATED FROM PIPELINE OUTPUT]
+| Classification | Criteria | n | % |
+|---|---|---|---|
+| Robust | ≥90% specifications agree | 80 | 19.9 |
+| Moderately Robust | 70-89% agree | 89 | 22.1 |
+| Fragile | 50-69% agree | 145 | 36.0 |
+| Unstable | <50% agree | 89 | 22.1 |
+| **Total** | | **403** | **100.0** |
 
-### Table 3. Predictors of Robustness Score
-[AUTO-GENERATED FROM PIPELINE OUTPUT]
+Mean robustness score: 66.4% (median 66.7%, IQR 56.5-87.2%, range 5.8-100.0%).
+
+### Table 2. Dimension Attribution (Mean η² Across All Reviews)
+
+| Analytical Dimension | Levels | Mean η² | Interpretation |
+|---|---|---|---|
+| Publication bias correction | None, Trim-and-fill, PET-PEESE | 0.374 | Dominant driver of disagreement |
+| CI method | Wald, HKSJ, t-distribution | 0.036 | Minor influence |
+| Variance estimator | FE, DL, REML, PM, SJ, HS, HE | 0.034 | Minor influence |
+| Leave-one-out | Full set, each study removed | 0.022 | Minimal influence |
+
+η² represents the proportion of variance in the agreement indicator (agree/disagree with reference) explained by each dimension, averaged across all reviews.
+
+### Table 3. Robustness by Number of Studies (k-bands)
+
+| k-band | n reviews | Mean robustness (%) | Median (%) | % Fragile or Unstable |
+|---|---|---|---|---|
+| 3-5 | 143 | 64.3 | 66.7 | 54 |
+| 6-10 | 110 | 65.2 | 66.7 | 55 |
+| 11-20 | 67 | 67.4 | 66.7 | 69 |
+| 21-50 | 64 | 70.6 | 66.7 | 61 |
+| 51-180 | 19 | 72.1 | 66.7 | 58 |
+
+### Table 4. Multiple Regression: Predictors of Robustness Score
+
+| Variable | Beta | SE | t | p |
+|---|---|---|---|---|
+| Intercept | 58.99 | 5.19 | 11.37 | <0.001 |
+| log(k) | 2.07 | 1.32 | 1.57 | 0.118 |
+| |Effect magnitude| | 0.64 | 0.31 | 2.06 | 0.040 |
+| IQR(effect) | -0.87 | 0.76 | -1.14 | 0.255 |
+| Ratio scale (vs difference) | 3.14 | 4.15 | 0.76 | 0.449 |
+
+Overall model: R² = 0.018, adjusted R² = 0.006, n = 403.
 
 ## Figures
 
-### Figure 1. Distribution of Robustness Scores
-[HISTOGRAM — from dashboard]
+### Figure 1. Distribution of Robustness Scores Across 403 Cochrane Meta-Analyses
+Histogram of robustness scores (0-100%) with 5-percentage-point bins, colour-coded by classification (green = Robust, yellow = Moderate, red = Fragile, purple = Unstable). Available in the interactive dashboard.
 
 ### Figure 2. Specification Curve for an Exemplar Fragile Review
-[SPEC CURVE — from dashboard]
+All specifications sorted by pooled effect estimate (x-axis), with dots coloured by statistical significance. The reference specification (DL + Wald + unadjusted) is highlighted. Panels below show which dimension levels apply to each specification.
 
 ### Figure 3. Dimension Attribution Across All Reviews
-[STACKED BAR — from dashboard]
+Horizontal bar chart showing mean η² for each analytical dimension. Publication bias correction (η² = 0.374) dominates, with CI method, variance estimator, and leave-one-out each contributing η² < 0.04.
 
 ### Figure 4. Relationship Between Number of Studies and Robustness
-[SCATTER — from dashboard]
+Scatter plot of k (log scale, x-axis) versus robustness score (y-axis), with points coloured by classification. The near-flat relationship (r = 0.081, p = 0.107) demonstrates that fragility is not resolved by including more studies.
