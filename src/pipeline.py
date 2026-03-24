@@ -123,7 +123,7 @@ def run_pipeline(pairwise_dir: str, output_dir: str, max_reviews: int = 0,
 
     summary = _compute_summary(all_classifications, total_time)
     summary_path = output_path / 'fragility_atlas_summary.json'
-    with open(summary_path, 'w') as f:
+    with open(summary_path, 'w', encoding='utf-8') as f:
         json.dump(summary, f, indent=2)
     print(f"  Summary: {summary_path}")
 
@@ -198,6 +198,10 @@ def _export_specifications(specs, path):
         writer.writeheader()
         for s in specs:
             row = asdict(s)
+            for str_field in ('leave_out',):
+                val = str(row.get(str_field, ''))
+                if val and val[0] in ('=', '+', '@', '\t', '\r'):
+                    row[str_field] = "'" + val
             writer.writerow({k: row[k] for k in fields})
 
 

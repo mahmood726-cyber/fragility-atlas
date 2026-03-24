@@ -13,7 +13,7 @@ def populate(output_dir: str = r'C:\FragilityAtlas\data\output',
     output = Path(output_dir)
 
     # Load summary
-    with open(output / 'fragility_atlas_summary.json') as f:
+    with open(output / 'fragility_atlas_summary.json', encoding='utf-8') as f:
         summary = json.load(f)
 
     # Load classifications

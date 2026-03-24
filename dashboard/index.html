@@ -532,7 +532,7 @@ body.dark .badge-unstable { color: #c39bd3; }
 </main>
 
 <footer class="footer">
-  <p>Fragility Atlas Dashboard. Data: real pipeline data (407 reviews, 399,546 specifications). Generated for research and educational purposes.</p>
+  <p id="footerText">Fragility Atlas Dashboard. Generated for research and educational purposes.</p>
 </footer>
 
 <script>
@@ -1102,6 +1102,14 @@ function getCSSVar(name) {
     var isDark = document.body.classList.contains('dark');
     icon.innerHTML = isDark ? '&#9788;' : '&#9790;';
     label.textContent = isDark ? 'Light' : 'Dark';
+  }
+})();
+
+/* Dynamic footer with actual data counts */
+(function() {
+  var ft = document.getElementById('footerText');
+  if (ft && typeof TOTAL_REVIEWS !== 'undefined') {
+    ft.textContent = 'Fragility Atlas Dashboard. Data: ' + TOTAL_REVIEWS + ' reviews, ' + formatNumber(totalSpecs) + ' specifications. Generated for research and educational purposes.';
   }
 })();
 </script>

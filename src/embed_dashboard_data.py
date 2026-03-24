@@ -12,7 +12,7 @@ def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
     output = Path(output_dir)
 
     # Load summary
-    with open(output / 'fragility_atlas_summary.json') as f:
+    with open(output / 'fragility_atlas_summary.json', encoding='utf-8') as f:
         summary = json.load(f)
 
     # Load reviews CSV
@@ -42,7 +42,7 @@ def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
     import re
 
     # Replace SUMMARY_DATA
-    match = re.search(r'const SUMMARY_DATA\s*=\s*', html)
+    match = re.search(r'(?:const|var)\s+SUMMARY_DATA\s*=\s*', html)
     if match:
         start = match.start()
         # Find the matching closing brace + semicolon
@@ -56,12 +56,12 @@ def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
                 depth -= 1
                 if depth == 0:
                     end = html.index(';', pos) + 1
-                    html = html[:start] + f'const SUMMARY_DATA = {summary_js};' + html[end:]
+                    html = html[:start] + f'var SUMMARY_DATA = {summary_js};' + html[end:]
                     break
             pos += 1
 
     # Replace REVIEWS_DATA
-    match = re.search(r'const REVIEWS_DATA\s*=\s*', html)
+    match = re.search(r'(?:const|var)\s+REVIEWS_DATA\s*=\s*', html)
     if match:
         start = match.start()
         bracket_start = html.index('[', match.end())
@@ -74,7 +74,7 @@ def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
                 depth -= 1
                 if depth == 0:
                     end = html.index(';', pos) + 1
-                    html = html[:start] + f'const REVIEWS_DATA = {reviews_js};' + html[end:]
+                    html = html[:start] + f'var REVIEWS_DATA = {reviews_js};' + html[end:]
                     break
             pos += 1
 
