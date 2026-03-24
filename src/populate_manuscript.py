@@ -23,11 +23,14 @@ def populate(output_dir: str = r'C:\FragilityAtlas\data\output',
         for row in reader:
             reviews.append(row)
 
-    n = summary['n_reviews']
-    counts = summary['classification_counts']
-    rob = summary['robustness_distribution']
-    k_dist = summary['k_distribution']
-    eta2 = summary['eta2_means']
+    n = summary.get('n_reviews', 0)
+    if n == 0:
+        print("No reviews in pipeline output — cannot populate manuscript.")
+        return
+    counts = summary.get('classification_counts', {})
+    rob = summary.get('robustness_distribution', {})
+    k_dist = summary.get('k_distribution', {})
+    eta2 = summary.get('eta2_means', {})
 
     # Compute scale breakdown
     n_ratio = summary['scale_counts']['ratio']

@@ -180,6 +180,8 @@ def _pm_tau2(yi, sei, k, max_iter=100, tol=1e-8):
 
 def _sj_tau2(yi, sei, k):
     """Sidik-Jonkman moment estimator (2005)."""
+    if k < 2:
+        return 0.0
     vi = sei ** 2
     # Unweighted mean
     theta_uw = np.mean(yi)
@@ -200,6 +202,8 @@ def _sj_tau2(yi, sei, k):
 
 def _hs_tau2(yi, sei, k):
     """Hunter-Schmidt variance components estimator."""
+    if k < 2:
+        return 0.0
     vi = sei ** 2
     # Unweighted (sample-size weighted in original HS, but we use equal weights)
     theta = np.mean(yi)
@@ -210,6 +214,8 @@ def _hs_tau2(yi, sei, k):
 
 def _he_tau2(yi, sei, k):
     """Hedges unweighted estimator."""
+    if k < 2:
+        return 0.0
     vi = sei ** 2
     theta = np.mean(yi)
     Q_uw = np.sum((yi - theta) ** 2)

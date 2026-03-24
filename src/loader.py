@@ -48,9 +48,23 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
 
     analysis_name = str(primary['Analysis.name'].iloc[0])
 
-    # Determine scale: ratio (all Mean > 0) vs difference (can be negative)
-    means = primary['Mean'].dropna()
-    scale = 'ratio' if (means > 0).all() else 'difference'
+    # P0-2 FIX: Determine scale from raw data columns, not sign of means.
+    # Binary outcomes (cases/N present and nonzero) → ratio scale (RR/OR).
+    # Continuous outcomes (mean/SD present) → difference scale (MD/SMD).
+    # Fallback: if all Mean > 0 → ratio; else → difference.
+    has_binary = (primary['Experimental.cases'].notna() & (primary['Experimental.cases'] > 0)).any()
+    exp_mean = pd.to_numeric(primary['Experimental.mean'], errors='coerce')
+    exp_sd = pd.to_numeric(primary['Experimental.SD'], errors='coerce')
+    has_continuous = (exp_mean.notna() & (exp_mean != 0)).any() and (exp_sd.notna() & (exp_sd != 0)).any()
+
+    if has_continuous and not has_binary:
+        scale = 'difference'
+    elif has_binary:
+        scale = 'ratio'
+    else:
+        # Fallback: infer from whether any Mean values are negative
+        means = primary['Mean'].dropna()
+        scale = 'ratio' if (means > 0).all() else 'difference'
 
     # Compute yi and sei
     yi, sei, ni, labels = _compute_effects(primary, scale)
@@ -68,18 +82,16 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
     if len(yi) < 3:
         return None
 
-    # Cochrane pooled estimate (from the data, using inverse-variance FE on this analysis)
-    cochrane_pooled = float(np.nanmedian(means))
-    cochrane_ci_lo = float(primary['CI.start'].median())
-    cochrane_ci_hi = float(primary['CI.end'].median())
+    # P0-1 FIX: Compute actual FE inverse-variance pooled estimate from yi/sei
+    wi = 1.0 / (sei ** 2)
+    theta_fe = float(np.sum(wi * yi) / np.sum(wi))
+    se_fe = float(1.0 / math.sqrt(np.sum(wi)))
+    cochrane_pooled = theta_fe
+    cochrane_ci_lo = theta_fe - 1.96 * se_fe
+    cochrane_ci_hi = theta_fe + 1.96 * se_fe
 
-    # Determine significance from the Cochrane pooled CI
-    null_value = 0.0 if scale == 'difference' else 1.0
-    if scale == 'ratio':
-        # Cochrane stores on natural RR scale
-        is_sig = (cochrane_ci_lo > null_value) or (cochrane_ci_hi < null_value)
-    else:
-        is_sig = (cochrane_ci_lo > null_value) or (cochrane_ci_hi < null_value)
+    # Determine significance: CI excludes zero (log-scale for ratio, raw for difference)
+    is_sig = (cochrane_ci_lo > 0) or (cochrane_ci_hi < 0)
 
     return ReviewData(
         review_id=review_id,

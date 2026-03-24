@@ -79,7 +79,12 @@ def generate_specifications(review: ReviewData, conf_level: float = 0.95) -> Lis
                     is_significant=is_sig,
                     direction=direction,
                 ))
-            except Exception:
+            except (ValueError, FloatingPointError, ZeroDivisionError):
+                continue
+            except Exception as e:
+                import sys
+                print(f"Warning: spec {estimator}/{ci_method}/{bias_corr} "
+                      f"failed for {review.review_id}: {e}", file=sys.stderr)
                 continue
 
     return results
