@@ -21,8 +21,16 @@ DEFAULT_PAIRWISE_DIR = r'C:\Models\Pairwise70\data'
 DEFAULT_OUTPUT_DIR = r'C:\FragilityAtlas\data\output'
 
 
+def _process_review(args):
+    """Process a single review (for multiprocessing)."""
+    review, conf_level = args
+    specs = generate_specifications(review, conf_level)
+    classification = classify_review(review, specs)
+    return classification, specs
+
+
 def run_pipeline(pairwise_dir: str, output_dir: str, max_reviews: int = 0,
-                 conf_level: float = 0.95):
+                 conf_level: float = 0.95, workers: int = 1):
     """Run the full Fragility Atlas pipeline."""
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
@@ -31,6 +39,8 @@ def run_pipeline(pairwise_dir: str, output_dir: str, max_reviews: int = 0,
     print(f"========================")
     print(f"Data: {pairwise_dir}")
     print(f"Output: {output_dir}")
+    if workers > 1:
+        print(f"Workers: {workers}")
     print()
 
     # Phase 1: Load reviews
@@ -48,23 +58,53 @@ def run_pipeline(pairwise_dir: str, output_dir: str, max_reviews: int = 0,
     total_specs = 0
 
     t0 = time.time()
-    for i, review in enumerate(reviews):
-        t_review = time.time()
-        specs = generate_specifications(review, conf_level)
-        classification = classify_review(review, specs)
 
-        all_classifications.append(classification)
-        all_specs.extend(specs)
-        total_specs += len(specs)
+    if workers > 1:
+        # Multiprocessing mode
+        from concurrent.futures import ProcessPoolExecutor, as_completed
+        tasks = [(review, conf_level) for review in reviews]
+        done = 0
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = {executor.submit(_process_review, task): i
+                       for i, task in enumerate(tasks)}
+            # Collect results in submission order
+            results_map = {}
+            for future in as_completed(futures):
+                idx = futures[future]
+                classification, specs = future.result()
+                results_map[idx] = (classification, specs)
+                done += 1
+                if done % 20 == 0 or done == len(reviews):
+                    rate = done / (time.time() - t0)
+                    eta = (len(reviews) - done) / rate if rate > 0 else 0
+                    print(f"  [{done}/{len(reviews)}] ETA: {eta:.0f}s")
+                    sys.stdout.flush()
 
-        elapsed = time.time() - t_review
-        if (i + 1) % 10 == 0 or (i + 1) == len(reviews):
-            rate = (i + 1) / (time.time() - t0)
-            eta = (len(reviews) - i - 1) / rate if rate > 0 else 0
-            print(f"  [{i+1}/{len(reviews)}] {review.review_id}: k={review.k}, "
-                  f"specs={len(specs)}, robustness={classification.robustness_score:.1f}% "
-                  f"({classification.classification}) [{elapsed:.1f}s] ETA: {eta:.0f}s")
-            sys.stdout.flush()
+        # Reassemble in original order
+        for i in range(len(reviews)):
+            classification, specs = results_map[i]
+            all_classifications.append(classification)
+            all_specs.extend(specs)
+            total_specs += len(specs)
+    else:
+        # Sequential mode (original)
+        for i, review in enumerate(reviews):
+            t_review = time.time()
+            specs = generate_specifications(review, conf_level)
+            classification = classify_review(review, specs)
+
+            all_classifications.append(classification)
+            all_specs.extend(specs)
+            total_specs += len(specs)
+
+            elapsed = time.time() - t_review
+            if (i + 1) % 10 == 0 or (i + 1) == len(reviews):
+                rate = (i + 1) / (time.time() - t0)
+                eta = (len(reviews) - i - 1) / rate if rate > 0 else 0
+                print(f"  [{i+1}/{len(reviews)}] {review.review_id}: k={review.k}, "
+                      f"specs={len(specs)}, robustness={classification.robustness_score:.1f}% "
+                      f"({classification.classification}) [{elapsed:.1f}s] ETA: {eta:.0f}s")
+                sys.stdout.flush()
 
     total_time = time.time() - t0
     print(f"\n  Total: {total_specs:,} specifications in {total_time:.1f}s")
@@ -217,13 +257,15 @@ def main():
                         help='Max reviews to process (0 = all)')
     parser.add_argument('--conf-level', type=float, default=0.95,
                         help='Confidence level (default: 0.95)')
+    parser.add_argument('--workers', type=int, default=1,
+                        help='Number of parallel workers (default: 1)')
     args = parser.parse_args()
 
-    # SE-P1-5 FIX: validate conf_level range
     if not (0 < args.conf_level < 1):
         parser.error("conf-level must be between 0 and 1 (exclusive)")
 
-    run_pipeline(args.pairwise_dir, args.output_dir, args.max_reviews, args.conf_level)
+    run_pipeline(args.pairwise_dir, args.output_dir, args.max_reviews,
+                 args.conf_level, args.workers)
 
 
 if __name__ == '__main__':

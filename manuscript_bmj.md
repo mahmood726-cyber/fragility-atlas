@@ -143,7 +143,9 @@ Across all reviews, the most influential analytical dimension was Bias Correctio
 
 ### Predictors of fragility
 
-[PREDICTORS_TEXT — regression results]
+We examined whether review-level characteristics predicted robustness. In a multiple linear regression including log(k), absolute effect magnitude, effect size IQR, and outcome scale (ratio vs difference), the overall model explained only 1.8% of variance in robustness scores (R² = 0.018, adjusted R² = 0.006). Only absolute effect magnitude was a marginally significant predictor (beta = 0.64, p = 0.04); larger effects were associated with slightly higher robustness. The number of studies (log k: beta = 2.07, p = 0.12), effect size heterogeneity (IQR: beta = -0.87, p = 0.26), and outcome scale (ratio vs difference: beta = 3.14, p = 0.45) were not significant predictors.
+
+Robustness did not meaningfully vary by number of studies: reviews with k = 3-5 had mean robustness of 64.3% compared to 72.1% for reviews with k > 50 (Table 3). The proportion classified as Fragile or Unstable was 54-69% across all k-bands, indicating that methodological sensitivity is pervasive regardless of the amount of available evidence.
 
 ## Discussion
 
