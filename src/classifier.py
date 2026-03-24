@@ -26,6 +26,8 @@ class ReviewClassification:
     eta2_ci_method: float
     eta2_bias_correction: float
     eta2_leave_out: float
+    # P1-7 FIX: top dimension field for dashboard
+    top_dimension: str
     # Summary stats across specs
     median_theta: float
     iqr_theta: float
@@ -80,6 +82,15 @@ def classify_review(review: ReviewData, specs: List[SpecResult]) -> ReviewClassi
 
     eta2 = _compute_eta2(specs, agreement_vector)
 
+    # P1-7 FIX: compute top dimension from eta2 values
+    dims = {
+        'Estimator': eta2.get('estimator', 0),
+        'CI Method': eta2.get('ci_method', 0),
+        'Bias Correction': eta2.get('bias_correction', 0),
+        'Leave-One-Out': eta2.get('leave_out', 0),
+    }
+    top_dimension = max(dims, key=dims.get)
+
     # Summary stats
     thetas = np.array([s.theta for s in specs])
     sig_frac = np.mean([s.is_significant for s in specs])
@@ -100,6 +111,7 @@ def classify_review(review: ReviewData, specs: List[SpecResult]) -> ReviewClassi
         eta2_ci_method=eta2.get('ci_method', 0),
         eta2_bias_correction=eta2.get('bias_correction', 0),
         eta2_leave_out=eta2.get('leave_out', 0),
+        top_dimension=top_dimension,
         median_theta=float(np.median(thetas)),
         iqr_theta=float(np.percentile(thetas, 75) - np.percentile(thetas, 25)),
         frac_significant=float(sig_frac),
@@ -113,7 +125,6 @@ def _find_reference_spec(specs: List[SpecResult]):
         if (s.estimator == 'DL' and s.ci_method == 'Wald' and
                 s.bias_correction == 'none' and s.leave_out == ''):
             return s
-    # Fallback: any full-set spec
     for s in specs:
         if s.leave_out == '':
             return s
@@ -121,7 +132,11 @@ def _find_reference_spec(specs: List[SpecResult]):
 
 
 def _compute_eta2(specs: List[SpecResult], agreement: np.ndarray) -> Dict[str, float]:
-    """Compute eta² (variance explained) for each specification dimension."""
+    """Compute eta² (variance explained) for each specification dimension.
+
+    P1-1 FIX: LOO dimension now groups by specific study label (not binary full/loo),
+    capturing which individual study removals drive disagreement.
+    """
     total_var = np.var(agreement)
     if total_var < 1e-15:
         return {'estimator': 0, 'ci_method': 0, 'bias_correction': 0, 'leave_out': 0}
@@ -131,7 +146,7 @@ def _compute_eta2(specs: List[SpecResult], agreement: np.ndarray) -> Dict[str, f
         ('estimator', lambda s: s.estimator),
         ('ci_method', lambda s: s.ci_method),
         ('bias_correction', lambda s: s.bias_correction),
-        ('leave_out', lambda s: 'full' if s.leave_out == '' else 'loo'),
+        ('leave_out', lambda s: s.leave_out if s.leave_out else '__full__'),
     ]:
         groups = {}
         for i, s in enumerate(specs):
@@ -140,7 +155,6 @@ def _compute_eta2(specs: List[SpecResult], agreement: np.ndarray) -> Dict[str, f
                 groups[key] = []
             groups[key].append(agreement[i])
 
-        # Between-group sum of squares
         grand_mean = np.mean(agreement)
         ss_between = sum(
             len(vals) * (np.mean(vals) - grand_mean) ** 2
@@ -170,6 +184,7 @@ def _empty_classification(review):
         eta2_ci_method=0,
         eta2_bias_correction=0,
         eta2_leave_out=0,
+        top_dimension='N/A',
         median_theta=0,
         iqr_theta=0,
         frac_significant=0,

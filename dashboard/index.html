@@ -764,6 +764,13 @@ function getCSSVar(name) {
     });
     bar.addEventListener('mousemove', positionTooltip);
     bar.addEventListener('mouseleave', hideTooltip);
+    /* SE-P2-6 FIX: keyboard tooltip */
+    bar.addEventListener('focus', function(e) {
+      var idx = parseInt(this.getAttribute('data-bin'));
+      var rect = this.getBoundingClientRect();
+      showTooltip({clientX: rect.left + rect.width/2, clientY: rect.top}, '<strong>' + (idx * BIN_WIDTH) + '-' + ((idx + 1) * BIN_WIDTH) + '%</strong><br>' + bins[idx] + ' reviews');
+    });
+    bar.addEventListener('blur', hideTooltip);
   });
 })();
 

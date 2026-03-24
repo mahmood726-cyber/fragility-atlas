@@ -1,6 +1,8 @@
+## REVIEW STATUS: 9/9 P0 FIXED — pipeline re-run verified
 ## Multi-Persona Review: Fragility Atlas (all src/, tests/, dashboard/)
 ### Date: 2026-03-24
-### Summary: 9 P0, 13 P1, 11 P2 (across 3 personas so far)
+### Summary: 9 P0 [ALL FIXED], 13 P1, 11 P2 (across 3 personas)
+### Tests: 15/15 pass, pipeline re-run: 403 reviews, 394,569 specs
 
 ---
 

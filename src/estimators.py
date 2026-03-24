@@ -142,6 +142,10 @@ def _reml_tau2(yi, sei, k, max_iter=100, tol=1e-8):
             tau2 = tau2_new
             break
         tau2 = tau2_new
+    else:
+        import sys
+        print(f"Warning: REML did not converge in {max_iter} iterations (tau2={tau2:.6f})",
+              file=sys.stderr)
 
     return tau2
 
