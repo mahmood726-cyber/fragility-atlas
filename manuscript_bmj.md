@@ -1,13 +1,13 @@
 # The Fragility Atlas: How Robust Are Cochrane Meta-Analysis Conclusions to Analyst Choices? A Large-Scale Multiverse Analysis
 
 ## Authors
-[AUTHOR_NAME_PLACEHOLDER]^1
+Mahmood Ahmad^1
 
-^1 [AFFILIATION_PLACEHOLDER]
+^1 Royal Free Hospital, London, UK
 
-Corresponding author: [EMAIL_PLACEHOLDER]
+Corresponding author: mahmood.ahmad2@nhs.net
 
-ORCID: [ORCID_PLACEHOLDER]
+ORCID: 0009-0003-7781-4478
 
 ---
 
@@ -137,7 +137,7 @@ The mean robustness score was 66.4% (median 66.7%, IQR 56.5%-87.2%). Figure 1 sh
 
 ### Dimension attribution
 
-Across all reviews, the most influential analytical dimension was publication bias correction (mean η² = 0.374), followed by CI method (η² = 0.036), variance estimator (η² = 0.034), and leave-one-out sensitivity (η² = 0.022) (Table 2). The dominance of bias correction was consistent across review sizes: for reviews with k = 3-5, bias correction η² = 0.38; for k > 50, η² = 0.35.
+Across all reviews, the most influential analytical dimension was publication bias correction (mean η² = 0.374), followed by leave-one-out sensitivity (η² = 0.156), CI method (η² = 0.036), and variance estimator (η² = 0.035) (Table 2). The dominance of bias correction was consistent across review sizes: for reviews with k = 3-5, bias correction η² = 0.38; for k > 50, η² = 0.35.
 
 ### Predictors of fragility
 
@@ -151,7 +151,7 @@ Robustness did not meaningfully vary by number of studies: reviews with k = 3-5 
 
 In this large-scale multiverse analysis of 403 Cochrane systematic reviews encompassing 394,569 individual meta-analytic specifications, we found that the majority of meta-analysis conclusions are sensitive to reasonable analytical choices. Only one in five reviews (19.9%) produced conclusions that were robust across more than 90% of specifications. More than half (58.1%) were classified as Fragile or Unstable, meaning their conclusions changed under a substantial proportion of plausible analytical approaches.
 
-The most striking finding was the dominant role of publication bias correction. Whether an analyst chose to apply trim-and-fill or PET-PEESE correction — versus reporting the unadjusted result — explained ten times more variance in conclusions (mean η² = 0.374) than the choice of variance estimator (η² = 0.034) or confidence interval method (η² = 0.036). This suggests that the single most consequential methodological decision in meta-analysis is not how to pool the data, but whether and how to account for the selective publication of studies.
+The most striking finding was the dominant role of publication bias correction. Whether an analyst chose to apply trim-and-fill or PET-PEESE correction — versus reporting the unadjusted result — explained more than twice the variance of any other single dimension (mean η² = 0.374). Leave-one-out sensitivity was the second-largest driver (η² = 0.156), while the choice of variance estimator (η² = 0.035) and confidence interval method (η² = 0.036) contributed comparatively little. This suggests that the single most consequential methodological decision in meta-analysis is not how to pool the data, but whether and how to account for the selective publication of studies.
 
 Equally notable was the finding that fragility was essentially unpredictable from observable review characteristics. The number of included studies, the magnitude of the pooled effect, the degree of heterogeneity, and the type of outcome scale collectively explained less than 2% of variance in robustness scores (R² = 0.018). A review with 50 studies was nearly as likely to have a fragile conclusion as one with 5 studies. This means that neither reviewers nor guideline panels can rely on surface-level features of a meta-analysis to judge the stability of its conclusions.
 
@@ -253,8 +253,8 @@ Mean robustness score: 66.4% (median 66.7%, IQR 56.5-87.2%, range 5.8-100.0%).
 |---|---|---|---|
 | Publication bias correction | None, Trim-and-fill, PET-PEESE | 0.374 | Dominant driver of disagreement |
 | CI method | Wald, HKSJ, t-distribution | 0.036 | Minor influence |
-| Variance estimator | FE, DL, REML, PM, SJ, HS, HE | 0.034 | Minor influence |
-| Leave-one-out | Full set, each study removed | 0.022 | Minimal influence |
+| Leave-one-out | Full set, each study removed | 0.156 | Second-largest driver |
+| Variance estimator | FE, DL, REML, PM, SJ, HS, HE | 0.035 | Minor influence |
 
 η² represents the proportion of variance in the agreement indicator (agree/disagree with reference) explained by each dimension, averaged across all reviews.
 
