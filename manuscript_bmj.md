@@ -117,7 +117,7 @@ We examined whether robustness was associated with:
 
 ### Software
 
-All analyses were conducted in Python 3.13 using scipy 1.16.2 for statistical distributions. The complete pipeline is available as open-source software at [GITHUB_URL_PLACEHOLDER]. An interactive dashboard for exploring results is available at [DASHBOARD_URL_PLACEHOLDER].
+All analyses were conducted in Python 3.13 using scipy 1.16.2 for statistical distributions. The complete pipeline is available as open-source software at https://github.com/mahmood726-cyber/fragility-atlas. An interactive dashboard for exploring results is available at https://github.com/mahmood726-cyber/fragility-atlas#dashboard.
 
 ### Patient and public involvement
 
@@ -200,11 +200,11 @@ In this comprehensive multiverse analysis of 403 Cochrane systematic reviews, we
 
 ## Data availability statement
 
-The Pairwise70 dataset is available from [ZENODO_DOI_PLACEHOLDER]. The analysis code, interactive dashboard, and all output files are available at [GITHUB_URL_PLACEHOLDER]. A TruthCert provenance bundle documenting the complete analysis chain is included in the repository.
+The Pairwise70 dataset is available from [ZENODO_DOI_PLACEHOLDER]. The analysis code, interactive dashboard, and all output files are available at https://github.com/mahmood726-cyber/fragility-atlas. A TruthCert provenance bundle documenting the complete analysis chain is included in the repository.
 
 ## Funding
 
-[FUNDING_PLACEHOLDER]
+None.
 
 ## Competing interests
 
