@@ -1,0 +1,97 @@
+{
+  "title": "The Fragility Atlas: Multiverse Analysis of 403 Cochrane Meta-Analyses Reveals 58% Are Sensitive to Analyst Choices",
+  "slug": "fragility-atlas",
+  "author": "Mahmood Ahmad",
+  "date": "2026-03-26",
+  "body": "How robust are Cochrane meta-analysis conclusions when analysts make different but equally reasonable methodological choices? We applied multiverse analysis to 403 Cochrane systematic reviews from the Pairwise70 dataset, encompassing 394,569 individual meta-analytic specifications across five analytical dimensions. Each review was re-analysed across seven variance estimators, three confidence interval methods, three publication bias corrections, and leave-one-out subsets, then classified by agreement with the standard DerSimonian-Laird reference conclusion. The mean robustness score was 66.4 percent (median 66.7 percent, IQR 56.5 to 87.2 percent), with 58 percent of all reviews classified as Fragile or Unstable. Publication bias correction was the single most influential dimension, explaining ten times more variance (eta-squared 0.374) than variance estimator choice (eta-squared 0.036). These findings suggest that most Cochrane conclusions are substantially sensitive to defensible analytical alternatives, particularly the decision whether to adjust for publication bias. This analysis is limited to binary agreement classification and cannot capture the magnitude of effect size changes across specifications.",
+  "word_count": 156,
+  "sentence_count": 7,
+  "sentences": [
+    {
+      "role": "Question",
+      "text": "How robust are Cochrane meta-analysis conclusions when analysts make different but equally reasonable methodological choices?"
+    },
+    {
+      "role": "Dataset",
+      "text": "We applied multiverse analysis to 403 Cochrane systematic reviews from the Pairwise70 dataset, encompassing 394,569 individual meta-analytic specifications across five analytical dimensions."
+    },
+    {
+      "role": "Method",
+      "text": "Each review was re-analysed across seven variance estimators, three confidence interval methods, three publication bias corrections, and leave-one-out subsets, then classified by agreement with the standard DerSimonian-Laird reference conclusion."
+    },
+    {
+      "role": "Primary result",
+      "text": "The mean robustness score was 66.4 percent (median 66.7 percent, IQR 56.5 to 87.2 percent), with 58 percent of all reviews classified as Fragile or Unstable."
+    },
+    {
+      "role": "Robustness",
+      "text": "Publication bias correction was the single most influential dimension, explaining ten times more variance (eta-squared 0.374) than variance estimator choice (eta-squared 0.036)."
+    },
+    {
+      "role": "Interpretation",
+      "text": "These findings suggest that most Cochrane conclusions are substantially sensitive to defensible analytical alternatives, particularly the decision whether to adjust for publication bias."
+    },
+    {
+      "role": "Boundary",
+      "text": "This analysis is limited to binary agreement classification and cannot capture the magnitude of effect size changes across specifications."
+    }
+  ],
+  "notes": {
+    "app": "Fragility Atlas v1.0",
+    "data": "Pairwise70 dataset: 403 Cochrane reviews, 394,569 specifications",
+    "code": "https://github.com/mahmood726-cyber/fragility-atlas",
+    "doi": "",
+    "version": "1.0",
+    "date": "2026-03-26",
+    "certainty": "high",
+    "validation": "DRAFT"
+  },
+  "type": "methods",
+  "primary_estimand": "Robustness score (percent agreement across specifications)",
+  "validation": {
+    "status": "pass",
+    "checks": [
+      {
+        "name": "single paragraph",
+        "ok": true,
+        "detail": "Body must not contain blank-line paragraph breaks."
+      },
+      {
+        "name": "sentence count",
+        "ok": true,
+        "detail": "Found 7 sentences."
+      },
+      {
+        "name": "word count",
+        "ok": true,
+        "detail": "Found 156 words."
+      },
+      {
+        "name": "no headings",
+        "ok": true,
+        "detail": "No markdown headings allowed in body."
+      },
+      {
+        "name": "no links",
+        "ok": true,
+        "detail": "No links or DOI links allowed in body."
+      },
+      {
+        "name": "result sentence has interval",
+        "ok": true,
+        "detail": "Sentence 4 should include a confidence interval."
+      },
+      {
+        "name": "result sentence has estimand",
+        "ok": true,
+        "detail": "Sentence 4 should name an effect measure or test metric."
+      },
+      {
+        "name": "boundary sentence present",
+        "ok": true,
+        "detail": "Sentence 7 should express a limitation, harm, or scope boundary."
+      }
+    ]
+  },
+  "schema": "e156-v0.2"
+}
