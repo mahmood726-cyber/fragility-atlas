@@ -1,0 +1,31 @@
+{
+  "title": "The Fragility Atlas: Multiverse Robustness Analysis of 407 Cochrane Meta-Analyses",
+  "description": "Code, data, and interactive dashboard for a large-scale multiverse analysis assessing the robustness of 407 Cochrane meta-analyses across 7 estimators, 3 CI methods, 3 bias corrections, and leave-one-out sensitivity. 56.2% of meta-analyses were classified as fragile or unstable.",
+  "upload_type": "dataset",
+  "creators": [
+    {
+      "name": "Ahmad, Mahmood",
+      "affiliation": "Royal Free Hospital, London, United Kingdom",
+      "orcid": "0009-0003-7781-4478"
+    }
+  ],
+  "keywords": [
+    "meta-analysis",
+    "multiverse analysis",
+    "robustness",
+    "fragility",
+    "Cochrane",
+    "systematic review",
+    "evidence synthesis",
+    "specification curve"
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/mahmood726-cyber/fragility-atlas",
+      "scheme": "url"
+    }
+  ]
+}

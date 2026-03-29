@@ -200,7 +200,7 @@ In this comprehensive multiverse analysis of 403 Cochrane systematic reviews, we
 
 ## Data availability statement
 
-The Pairwise70 dataset is available from [ZENODO_DOI_PLACEHOLDER]. The analysis code, interactive dashboard, and all output files are available at https://github.com/mahmood726-cyber/fragility-atlas. A TruthCert provenance bundle documenting the complete analysis chain is included in the repository.
+The Pairwise70 dataset is available from [TO BE DEPOSITED]. The analysis code, interactive dashboard, and all output files are available at https://github.com/mahmood726-cyber/fragility-atlas. A TruthCert provenance bundle documenting the complete analysis chain is included in the repository.
 
 ## Funding
 
