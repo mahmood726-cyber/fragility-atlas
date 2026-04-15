@@ -8,6 +8,7 @@ import json
 import time
 import argparse
 import csv
+import os
 import numpy as np
 from pathlib import Path
 from dataclasses import asdict
@@ -16,9 +17,8 @@ from src.loader import load_all_reviews
 from src.specifications import generate_specifications, SpecResult
 from src.classifier import classify_review, ReviewClassification
 
-
-DEFAULT_PAIRWISE_DIR = r'C:\Models\Pairwise70\data'
-DEFAULT_OUTPUT_DIR = r'C:\FragilityAtlas\data\output'
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_PROJECTS_ROOT = PROJECT_ROOT.parent
 
 
 def _process_review(args):
@@ -29,25 +29,62 @@ def _process_review(args):
     return classification, specs
 
 
-def run_pipeline(pairwise_dir: str, output_dir: str, max_reviews: int = 0,
-                 conf_level: float = 0.95, workers: int = 1):
+def resolve_paths(project_root=None, projects_root=None, pairwise_dir=None, output_dir=None):
+    project_root = Path(project_root).resolve() if project_root else PROJECT_ROOT
+    projects_root = Path(projects_root).resolve() if projects_root else project_root.parent
+
+    pairwise_candidates = []
+    if pairwise_dir:
+        pairwise_candidates.append(Path(pairwise_dir).expanduser())
+    env_pairwise = os.getenv('PAIRWISE70_DATA_DIR')
+    if env_pairwise:
+        pairwise_candidates.append(Path(env_pairwise).expanduser())
+    pairwise_candidates.extend([
+        projects_root / 'Models' / 'Pairwise70' / 'data',
+        projects_root / 'Projects' / 'Pairwise70' / 'data',
+    ])
+    resolved_pairwise = next((path.resolve() for path in pairwise_candidates if path.exists()), pairwise_candidates[0].resolve())
+
+    resolved_output = Path(output_dir).resolve() if output_dir else project_root / 'data' / 'output'
+    return {
+        'pairwise_dir': resolved_pairwise,
+        'output_dir': resolved_output,
+    }
+
+
+def run_pipeline(pairwise_dir=None, output_dir=None, max_reviews: int = 0,
+                 conf_level: float = 0.95, workers: int = 1,
+                 project_root=None, projects_root=None):
     """Run the full Fragility Atlas pipeline."""
-    output_path = Path(output_dir)
+    paths = resolve_paths(
+        project_root=project_root,
+        projects_root=projects_root,
+        pairwise_dir=pairwise_dir,
+        output_dir=output_dir,
+    )
+    pairwise_path = paths['pairwise_dir']
+    output_path = paths['output_dir']
     output_path.mkdir(parents=True, exist_ok=True)
 
     print(f"Fragility Atlas Pipeline")
     print(f"========================")
-    print(f"Data: {pairwise_dir}")
-    print(f"Output: {output_dir}")
+    print(f"Data: {pairwise_path}")
+    print(f"Output: {output_path}")
     if workers > 1:
         print(f"Workers: {workers}")
     print()
 
     # Phase 1: Load reviews
     print("Phase 1: Loading reviews...")
-    reviews = list(load_all_reviews(pairwise_dir, min_k=3))
+    if not pairwise_path.exists():
+        print(f"ERROR: Pairwise70 data directory not found: {pairwise_path}")
+        return None
+    reviews = list(load_all_reviews(pairwise_path, min_k=3))
     if max_reviews > 0:
         reviews = reviews[:max_reviews]
+    if not reviews:
+        print(f"ERROR: No eligible reviews found in {pairwise_path}")
+        return None
     print(f"  Loaded {len(reviews)} eligible reviews (k >= 3)")
     print()
 
@@ -133,6 +170,9 @@ def run_pipeline(pairwise_dir: str, output_dir: str, max_reviews: int = 0,
     print("HEADLINE RESULTS")
     print("=" * 60)
     n = len(all_classifications)
+    if n == 0:
+        print("ERROR: No classifications were produced; aborting summary.")
+        return None
     for cat in ['Robust', 'Moderate', 'Fragile', 'Unstable']:
         count = sum(1 for c in all_classifications if c.classification == cat)
         pct = count / n * 100 if n > 0 else 0
@@ -253,9 +293,9 @@ def _compute_summary(classifications, elapsed_time):
 
 def main():
     parser = argparse.ArgumentParser(description='Fragility Atlas Pipeline')
-    parser.add_argument('--pairwise-dir', default=DEFAULT_PAIRWISE_DIR,
+    parser.add_argument('--pairwise-dir', default=None,
                         help='Path to Pairwise70 RDA files')
-    parser.add_argument('--output-dir', default=DEFAULT_OUTPUT_DIR,
+    parser.add_argument('--output-dir', default=None,
                         help='Output directory')
     parser.add_argument('--max-reviews', type=int, default=0,
                         help='Max reviews to process (0 = all)')

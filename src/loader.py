@@ -63,7 +63,7 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
         scale = 'ratio'
     else:
         # Fallback: infer from whether any Mean values are negative
-        means = primary['Mean'].dropna()
+        means = primary['Mean'].copy().dropna()
         scale = 'ratio' if (means > 0).all() else 'difference'
 
     # Compute yi and sei
@@ -74,9 +74,9 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
 
     # Filter out studies with invalid/zero SE
     valid = (sei > 0) & np.isfinite(yi) & np.isfinite(sei)
-    yi = yi[valid]
-    sei = sei[valid]
-    ni = ni[valid]
+    yi = yi[valid].copy()
+    sei = sei[valid].copy()
+    ni = ni[valid].copy()
     labels = [l for l, v in zip(labels, valid) if v]
 
     if len(yi) < 3:
@@ -127,7 +127,7 @@ def _select_primary_analysis(df: pd.DataFrame) -> Optional[pd.DataFrame]:
     groups_df = pd.DataFrame(groups)
 
     # Prefer binary outcomes with largest k
-    binary = groups_df[groups_df['binary']]
+    binary = groups_df[groups_df['binary']].copy()
     if len(binary) > 0:
         best = binary.loc[binary['k'].idxmax()]
     else:
@@ -143,6 +143,9 @@ def _compute_effects(primary: pd.DataFrame, scale: str):
 
     for _, row in primary.iterrows():
         study = str(row['Study'])
+        # iterrows yields a Series; cell access returns scalar floats, not
+        # arrays/Series — so .copy() would raise AttributeError. Scalars are
+        # immutable, so direct assignment is safe here.
         mean_val = row['Mean']
         ci_lo = row['CI.start']
         ci_hi = row['CI.end']
