@@ -40,7 +40,7 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
 
     # Get review metadata; guard against empty DataFrames from malformed .rda files
     review_doi = (
-        str(df['review_doi'].iloc[0])
+        str(df['review_doi'].iloc[0])  # sentinel:skip-line P1-empty-dataframe-access
         if 'review_doi' in df.columns and len(df) > 0
         else ''
     )
@@ -50,6 +50,7 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
     if primary is None or len(primary) < 3:
         return None
 
+    # sentinel:skip-line P1-empty-dataframe-access  (guarded by len(primary) >= 3 above)
     analysis_name = str(primary['Analysis.name'].iloc[0])
 
     # P0-2 FIX: Determine scale from raw data columns, not sign of means.
@@ -122,6 +123,7 @@ def _select_primary_analysis(df: pd.DataFrame) -> Optional[pd.DataFrame]:
         has_binary = (sub['Experimental.cases'].notna() & (sub['Experimental.cases'] > 0)).any()
         groups.append({
             'grp': grp, 'num': num, 'k': k, 'binary': has_binary,
+            # sentinel:skip-line P1-empty-dataframe-access  (groupby invariant: sub has >=1 row)
             'name': sub['Analysis.name'].iloc[0]
         })
 
