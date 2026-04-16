@@ -38,8 +38,12 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
     # Standardize column names (handle both dot and space separators)
     df.columns = df.columns.str.replace(' ', '.', regex=False)
 
-    # Get review metadata
-    review_doi = str(df['review_doi'].iloc[0]) if 'review_doi' in df.columns else ''
+    # Get review metadata; guard against empty DataFrames from malformed .rda files
+    review_doi = (
+        str(df['review_doi'].iloc[0])
+        if 'review_doi' in df.columns and len(df) > 0
+        else ''
+    )
 
     # Group analyses and find the primary one
     primary = _select_primary_analysis(df)
