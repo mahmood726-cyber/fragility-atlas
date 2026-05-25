@@ -5,8 +5,10 @@ and return a MetaResult dataclass.
 """
 
 import math
-import numpy as np
 from dataclasses import dataclass
+
+import numpy as np
+
 from src.utils import normal_quantile, t_quantile
 
 
@@ -75,26 +77,25 @@ def _estimate_tau2(yi, sei, wi, estimator):
     if estimator == 'FE':
         return 0.0
 
-    elif estimator == 'DL':
+    if estimator == 'DL':
         return _dl_tau2(yi, wi, k)
 
-    elif estimator == 'REML':
+    if estimator == 'REML':
         return _reml_tau2(yi, sei, k)
 
-    elif estimator == 'PM':
+    if estimator == 'PM':
         return _pm_tau2(yi, sei, k)
 
-    elif estimator == 'SJ':
+    if estimator == 'SJ':
         return _sj_tau2(yi, sei, k)
 
-    elif estimator == 'HS':
+    if estimator == 'HS':
         return _hs_tau2(yi, sei, k)
 
-    elif estimator == 'HE':
+    if estimator == 'HE':
         return _he_tau2(yi, sei, k)
 
-    else:
-        raise ValueError(f"Unknown estimator: {estimator}")
+    raise ValueError(f"Unknown estimator: {estimator}")
 
 
 def _dl_tau2(yi, wi, k):

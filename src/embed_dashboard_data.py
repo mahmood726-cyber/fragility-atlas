@@ -1,7 +1,7 @@
 """Embed pipeline results into the dashboard HTML file."""
 
-import json
 import csv
+import json
 from pathlib import Path
 
 

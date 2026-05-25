@@ -1,8 +1,10 @@
 """Publication bias corrections: trim-and-fill (Duval-Tweedie L0) and PET-PEESE."""
 
 import math
+
 import numpy as np
-from src.estimators import meta_analysis, MetaResult
+
+from src.estimators import MetaResult, meta_analysis
 
 
 def trim_and_fill(yi: np.ndarray, sei: np.ndarray, estimator: str = 'DL',

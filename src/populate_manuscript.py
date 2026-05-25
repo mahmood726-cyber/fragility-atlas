@@ -1,9 +1,10 @@
 """Auto-populate the BMJ manuscript with results from the pipeline output."""
 
-import json
 import csv
-import numpy as np
+import json
 from pathlib import Path
+
+import numpy as np
 
 
 def populate(output_dir: str = r'C:\FragilityAtlas\data\output',
@@ -115,7 +116,7 @@ def populate(output_dir: str = r'C:\FragilityAtlas\data\output',
 
     Path(manuscript_path).write_text(text, encoding='utf-8')
     print(f"Manuscript populated with {len(replacements)} values.")
-    print(f"Key findings:")
+    print("Key findings:")
     print(f"  Reviews: {n}")
     print(f"  Robust: {counts.get('Robust', 0)} ({counts.get('Robust', 0)/n*100:.1f}%)")
     print(f"  Moderate: {counts.get('Moderate', 0)} ({counts.get('Moderate', 0)/n*100:.1f}%)")

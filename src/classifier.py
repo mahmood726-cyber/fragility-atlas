@@ -1,10 +1,11 @@
 """Robustness classification and dimension attribution for the Fragility Atlas."""
 
-import numpy as np
 from dataclasses import dataclass
-from typing import List, Dict
-from src.specifications import SpecResult
+
+import numpy as np
+
 from src.loader import ReviewData
+from src.specifications import SpecResult
 
 
 @dataclass
@@ -35,7 +36,7 @@ class ReviewClassification:
     frac_reversed: float
 
 
-def classify_review(review: ReviewData, specs: List[SpecResult]) -> ReviewClassification:
+def classify_review(review: ReviewData, specs: list[SpecResult]) -> ReviewClassification:
     """Classify a review based on its specification results."""
     if not specs:
         return _empty_classification(review)
@@ -119,7 +120,7 @@ def classify_review(review: ReviewData, specs: List[SpecResult]) -> ReviewClassi
     )
 
 
-def _find_reference_spec(specs: List[SpecResult]):
+def _find_reference_spec(specs: list[SpecResult]):
     """Find the DL + Wald + no-correction + full-set specification as reference."""
     for s in specs:
         if (s.estimator == 'DL' and s.ci_method == 'Wald' and
@@ -131,7 +132,7 @@ def _find_reference_spec(specs: List[SpecResult]):
     return None
 
 
-def _compute_eta2(specs: List[SpecResult], agreement: np.ndarray) -> Dict[str, float]:
+def _compute_eta2(specs: list[SpecResult], agreement: np.ndarray) -> dict[str, float]:
     """Compute eta² (variance explained) for each specification dimension.
 
     P1-1 FIX: LOO dimension now groups by specific study label (not binary full/loo),

@@ -1,17 +1,18 @@
 """Tests for corrections, classifier, loader, and specifications modules."""
 
+import math
 import os
 import sys
-import math
 from pathlib import Path
+
 import numpy as np
 import pytest
 
 sys.path.insert(0, str(__import__('pathlib').Path(__file__).parent.parent))
+from src.classifier import ReviewClassification, _compute_eta2, classify_review
+from src.corrections import _weighted_regression, pet_peese, trim_and_fill
 from src.estimators import meta_analysis
-from src.corrections import trim_and_fill, pet_peese, _weighted_regression
-from src.classifier import classify_review, _compute_eta2, ReviewClassification
-from src.specifications import generate_specifications, SpecResult
+from src.specifications import SpecResult, generate_specifications
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -213,6 +214,7 @@ class TestComputeEffectsRegression:
 
     def test_compute_effects_accepts_scalar_row_values(self):
         import pandas as pd
+
         from src.loader import _compute_effects
 
         primary = pd.DataFrame({
@@ -256,7 +258,7 @@ class TestLoaderIntegration:
 
 def test_run_pipeline_uses_repo_relative_sibling_projects(tmp_path, monkeypatch):
     from src.loader import ReviewData
-    from src.pipeline import run_pipeline, resolve_paths
+    from src.pipeline import resolve_paths, run_pipeline
 
     projects_root = tmp_path / 'projects'
     project_root = projects_root / 'FragilityAtlas'

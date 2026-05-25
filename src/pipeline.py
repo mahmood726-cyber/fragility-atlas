@@ -3,19 +3,20 @@
 Usage: python -m src.pipeline [--pairwise-dir DIR] [--output-dir DIR] [--max-reviews N]
 """
 
-import sys
-import json
-import time
 import argparse
 import csv
+import json
 import os
-import numpy as np
-from pathlib import Path
+import sys
+import time
 from dataclasses import asdict
+from pathlib import Path
 
+import numpy as np
+
+from src.classifier import classify_review
 from src.loader import load_all_reviews
-from src.specifications import generate_specifications, SpecResult
-from src.classifier import classify_review, ReviewClassification
+from src.specifications import generate_specifications
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PROJECTS_ROOT = PROJECT_ROOT.parent
@@ -66,8 +67,8 @@ def run_pipeline(pairwise_dir=None, output_dir=None, max_reviews: int = 0,
     output_path = paths['output_dir']
     output_path.mkdir(parents=True, exist_ok=True)
 
-    print(f"Fragility Atlas Pipeline")
-    print(f"========================")
+    print("Fragility Atlas Pipeline")
+    print("========================")
     print(f"Data: {pairwise_path}")
     print(f"Output: {output_path}")
     if workers > 1:

@@ -4,14 +4,14 @@ Validates estimator formulas, CI methods, and edge cases using algebraically
 verifiable properties rather than hardcoded reference values.
 """
 
-import sys
 import math
+import sys
+
 import numpy as np
 import pytest
 
 sys.path.insert(0, str(__import__('pathlib').Path(__file__).parent.parent))
 from src.estimators import meta_analysis
-
 
 # Test dataset: 13 studies with known heterogeneity
 TEST_YI = np.array([

@@ -1,13 +1,13 @@
 """Specification grid generator and executor for multiverse meta-analysis."""
 
-import numpy as np
-from itertools import product
 from dataclasses import dataclass
-from typing import List
-from src.estimators import meta_analysis, MetaResult
-from src.corrections import trim_and_fill, pet_peese
-from src.loader import ReviewData
+from itertools import product
 
+import numpy as np
+
+from src.corrections import pet_peese, trim_and_fill
+from src.estimators import meta_analysis
+from src.loader import ReviewData
 
 ESTIMATORS = ['FE', 'DL', 'REML', 'PM', 'SJ', 'HS', 'HE']
 CI_METHODS = ['Wald', 'HKSJ', 't-dist']
@@ -33,7 +33,7 @@ class SpecResult:
     direction: int          # +1 or -1
 
 
-def generate_specifications(review: ReviewData, conf_level: float = 0.95) -> List[SpecResult]:
+def generate_specifications(review: ReviewData, conf_level: float = 0.95) -> list[SpecResult]:
     """Generate and execute all specifications for a single review.
 
     Dimensions:
@@ -94,8 +94,8 @@ def _run_specification(yi, sei, estimator, ci_method, bias_corr, conf_level):
     """Execute a single specification."""
     if bias_corr == 'none':
         return meta_analysis(yi, sei, estimator, ci_method, conf_level)
-    elif bias_corr == 'trim-and-fill':
+    if bias_corr == 'trim-and-fill':
         return trim_and_fill(yi, sei, estimator, ci_method, conf_level)
-    elif bias_corr == 'PET-PEESE':
+    if bias_corr == 'PET-PEESE':
         return pet_peese(yi, sei, estimator, ci_method, conf_level)
     return None

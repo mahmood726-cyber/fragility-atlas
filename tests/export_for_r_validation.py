@@ -2,8 +2,9 @@
 import csv
 import json
 import random
-from pathlib import Path
 import sys
+from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.loader import load_review
 

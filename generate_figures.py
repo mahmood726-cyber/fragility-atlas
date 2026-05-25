@@ -4,17 +4,18 @@ Uses matplotlib only (no seaborn dependency).
 """
 
 import csv
-import json
-import sys
 import io
+import json
 import os
+import sys
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 import matplotlib
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 import numpy as np
 
 # Output directory
@@ -283,6 +284,7 @@ for y in [50, 70, 90]:
 
 # Compute correlation
 from math import log
+
 log_k = [log(k) for k in k_vals]
 n = len(log_k)
 mean_lk = sum(log_k) / n

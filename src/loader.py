@@ -1,12 +1,12 @@
 """Load Pairwise70 RDA files and select primary analyses for the Fragility Atlas."""
 
 import math
-import pyreadr
-import pandas as pd
-import numpy as np
+from dataclasses import dataclass
 from pathlib import Path
-from dataclasses import dataclass, field
-from typing import Optional
+
+import numpy as np
+import pandas as pd
+import pyreadr
 
 
 @dataclass
@@ -27,7 +27,7 @@ class ReviewData:
     is_significant: bool          # Cochrane conclusion: CI excludes null
 
 
-def load_review(rda_path: str) -> Optional[ReviewData]:
+def load_review(rda_path: str) -> ReviewData | None:
     """Load a single RDA file, select primary analysis, return ReviewData or None."""
     path = Path(rda_path)
     review_id = path.stem.split('_')[0]  # e.g., 'CD000028'
@@ -115,7 +115,7 @@ def load_review(rda_path: str) -> Optional[ReviewData]:
     )
 
 
-def _select_primary_analysis(df: pd.DataFrame) -> Optional[pd.DataFrame]:
+def _select_primary_analysis(df: pd.DataFrame) -> pd.DataFrame | None:
     """Select the primary analysis: largest k among binary outcomes, then largest k overall."""
     groups = []
     for (grp, num), sub in df.groupby(['Analysis.group', 'Analysis.number']):

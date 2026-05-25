@@ -3,7 +3,6 @@
 Uses scipy for statistical distributions (reliable, well-tested).
 """
 
-import math
 from scipy import stats
 
 
