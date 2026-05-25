@@ -1,7 +1,7 @@
 {
   "title": "The Fragility Atlas: Multiverse Analysis of 403 Cochrane Meta-Analyses Reveals 58% Are Sensitive to Analyst Choices",
   "slug": "fragility-atlas",
-  "path": "C:\\FragilityAtlas",
+  "path": "..",
   "type": "methods",
   "primary_estimand": "Robustness score (percent agreement across specifications)",
   "certainty": "high",

@@ -4,9 +4,12 @@ import csv
 import json
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = REPO_ROOT / 'data' / 'output'
+DEFAULT_DASHBOARD_PATH = REPO_ROOT / 'dashboard' / 'index.html'
 
-def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
-          dashboard_path: str = r'C:\FragilityAtlas\dashboard\index.html'):
+def embed(output_dir: str | Path = DEFAULT_OUTPUT_DIR,
+          dashboard_path: str | Path = DEFAULT_DASHBOARD_PATH):
     """Replace placeholder data in dashboard with real pipeline results."""
 
     output = Path(output_dir)
@@ -36,7 +39,8 @@ def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
     reviews_js = json.dumps(reviews, indent=None)  # compact for size
 
     # Read dashboard HTML
-    html = Path(dashboard_path).read_text(encoding='utf-8')
+    dashboard = Path(dashboard_path)
+    html = dashboard.read_text(encoding='utf-8')
 
     # Find and replace data blocks using string search (not regex — avoids backslash issues)
     import re
@@ -78,7 +82,7 @@ def embed(output_dir: str = r'C:\FragilityAtlas\data\output',
                     break
             pos += 1
 
-    Path(dashboard_path).write_text(html, encoding='utf-8')
+    dashboard.write_text(html, encoding='utf-8')
     print(f"Dashboard data embedded: {len(reviews)} reviews, summary with {summary['total_specifications']:,} specs")
 
 

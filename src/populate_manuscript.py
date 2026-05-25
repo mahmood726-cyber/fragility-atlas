@@ -6,9 +6,12 @@ from pathlib import Path
 
 import numpy as np
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = REPO_ROOT / 'data' / 'output'
+DEFAULT_MANUSCRIPT_PATH = REPO_ROOT / 'manuscript_bmj.md'
 
-def populate(output_dir: str = r'C:\FragilityAtlas\data\output',
-             manuscript_path: str = r'C:\FragilityAtlas\manuscript_bmj.md'):
+def populate(output_dir: str | Path = DEFAULT_OUTPUT_DIR,
+             manuscript_path: str | Path = DEFAULT_MANUSCRIPT_PATH):
     """Read pipeline outputs and populate manuscript placeholders."""
 
     output = Path(output_dir)
@@ -110,11 +113,12 @@ def populate(output_dir: str = r'C:\FragilityAtlas\data\output',
     replacements['[CONCLUSIONS_PARAGRAPH \u2014 to be filled after pipeline completes]'] = conclusions_para
 
     # Read and replace
-    text = Path(manuscript_path).read_text(encoding='utf-8')
+    manuscript = Path(manuscript_path)
+    text = manuscript.read_text(encoding='utf-8')
     for placeholder, value in replacements.items():
         text = text.replace(placeholder, value)
 
-    Path(manuscript_path).write_text(text, encoding='utf-8')
+    manuscript.write_text(text, encoding='utf-8')
     print(f"Manuscript populated with {len(replacements)} values.")
     print("Key findings:")
     print(f"  Reviews: {n}")
