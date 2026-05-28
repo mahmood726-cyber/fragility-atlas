@@ -5,6 +5,13 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = REPO_ROOT / "e156-submission" / "config.json"
+VALIDATION_PATHS = [
+    REPO_ROOT / "tests" / "export_for_r_validation.py",
+    REPO_ROOT / "tests" / "validate_vs_metafor.R",
+    REPO_ROOT / "tests" / "validate_proper.R",
+    REPO_ROOT / "tests" / "validate_all_estimators.R",
+    REPO_ROOT / "tests" / "check_cd001431.R",
+]
 
 
 class PortabilityContracts(unittest.TestCase):
@@ -25,6 +32,14 @@ class PortabilityContracts(unittest.TestCase):
         self.assertIn("DEFAULT_OUTPUT_DIR = REPO_ROOT / 'data' / 'output'", embed)
         self.assertIn("DEFAULT_DASHBOARD_PATH = REPO_ROOT / 'dashboard' / 'index.html'", embed)
         self.assertNotIn(r"C:\\FragilityAtlas", embed)
+
+    def test_validation_scripts_are_repo_local_and_env_driven(self) -> None:
+        for path in VALIDATION_PATHS:
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn(r"C:\FragilityAtlas", text, path.as_posix())
+            self.assertNotIn("C:/FragilityAtlas", text, path.as_posix())
+            self.assertNotIn(r"C:\Models\Pairwise70\data", text, path.as_posix())
+            self.assertNotIn("C:/Models/Pairwise70/data", text, path.as_posix())
 
 
 if __name__ == "__main__":

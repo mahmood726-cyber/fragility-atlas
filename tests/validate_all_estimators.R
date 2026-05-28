@@ -3,11 +3,42 @@
 
 library(metafor)
 
-specs <- read.csv("C:/FragilityAtlas/data/output/fragility_atlas_specifications.csv",
+resolve_project_root <- function() {
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    script_path <- sub("^--file=", "", file_arg[[1]])
+    return(normalizePath(file.path(dirname(script_path), ".."), winslash = "/", mustWork = TRUE))
+  }
+  normalizePath("..", winslash = "/", mustWork = TRUE)
+}
+
+first_existing_path <- function(paths) {
+  for (path in paths) {
+    if (!is.na(path) && nzchar(path) && file.exists(path)) {
+      return(normalizePath(path, winslash = "/", mustWork = TRUE))
+    }
+  }
+  NULL
+}
+
+PROJECT_ROOT <- resolve_project_root()
+OUTPUT_DIR <- file.path(PROJECT_ROOT, "data", "output")
+pairwise_dir <- first_existing_path(c(
+  Sys.getenv("PAIRWISE70_DATA_DIR", unset = ""),
+  file.path(dirname(PROJECT_ROOT), "Projects", "mahmood789", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Projects", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Models", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Pairwise70", "data")
+))
+if (is.null(pairwise_dir)) {
+  stop("Pairwise70 data directory not found. Set PAIRWISE70_DATA_DIR to run validation.")
+}
+
+specs <- read.csv(file.path(OUTPUT_DIR, "fragility_atlas_specifications.csv"),
                    stringsAsFactors = FALSE, fileEncoding = "UTF-8")
-results <- read.csv("C:/FragilityAtlas/data/output/fragility_atlas_results.csv",
+results <- read.csv(file.path(OUTPUT_DIR, "fragility_atlas_results.csv"),
                      stringsAsFactors = FALSE, fileEncoding = "UTF-8")
-pairwise_dir <- "C:/Models/Pairwise70/data"
 
 # Same 10 reviews as before
 set.seed(42)

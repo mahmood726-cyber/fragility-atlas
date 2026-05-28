@@ -7,8 +7,38 @@
 
 library(metafor)
 
-pairwise_dir <- "C:/Models/Pairwise70/data"
-python_results <- read.csv("C:/FragilityAtlas/data/output/fragility_atlas_results.csv",
+resolve_project_root <- function() {
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    script_path <- sub("^--file=", "", file_arg[[1]])
+    return(normalizePath(file.path(dirname(script_path), ".."), winslash = "/", mustWork = TRUE))
+  }
+  normalizePath("..", winslash = "/", mustWork = TRUE)
+}
+
+first_existing_path <- function(paths) {
+  for (path in paths) {
+    if (!is.na(path) && nzchar(path) && file.exists(path)) {
+      return(normalizePath(path, winslash = "/", mustWork = TRUE))
+    }
+  }
+  NULL
+}
+
+PROJECT_ROOT <- resolve_project_root()
+OUTPUT_DIR <- file.path(PROJECT_ROOT, "data", "output")
+pairwise_dir <- first_existing_path(c(
+  Sys.getenv("PAIRWISE70_DATA_DIR", unset = ""),
+  file.path(dirname(PROJECT_ROOT), "Projects", "mahmood789", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Projects", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Models", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Pairwise70", "data")
+))
+if (is.null(pairwise_dir)) {
+  stop("Pairwise70 data directory not found. Set PAIRWISE70_DATA_DIR to run validation.")
+}
+python_results <- read.csv(file.path(OUTPUT_DIR, "fragility_atlas_results.csv"),
                            stringsAsFactors = FALSE)
 
 # Select 10 reviews with varying k (seeded for reproducibility)
@@ -114,7 +144,7 @@ if (nrow(results) > 0) {
   cat(sprintf("  All within 0.1: %s\n", ifelse(all(diffs < 0.1), "YES", "NO")))
 
   # Save
-  write.csv(results, "C:/FragilityAtlas/data/output/r_crossvalidation.csv", row.names = FALSE)
+  write.csv(results, file.path(OUTPUT_DIR, "r_crossvalidation.csv"), row.names = FALSE)
   cat("\n  Saved to data/output/r_crossvalidation.csv\n")
 } else {
   cat("  No reviews validated.\n")

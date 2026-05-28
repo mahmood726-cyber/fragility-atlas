@@ -4,14 +4,44 @@
 
 library(metafor)
 
-pairwise_dir <- "C:/Models/Pairwise70/data"
+resolve_project_root <- function() {
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    script_path <- sub("^--file=", "", file_arg[[1]])
+    return(normalizePath(file.path(dirname(script_path), ".."), winslash = "/", mustWork = TRUE))
+  }
+  normalizePath("..", winslash = "/", mustWork = TRUE)
+}
+
+first_existing_path <- function(paths) {
+  for (path in paths) {
+    if (!is.na(path) && nzchar(path) && file.exists(path)) {
+      return(normalizePath(path, winslash = "/", mustWork = TRUE))
+    }
+  }
+  NULL
+}
+
+PROJECT_ROOT <- resolve_project_root()
+OUTPUT_DIR <- file.path(PROJECT_ROOT, "data", "output")
+pairwise_dir <- first_existing_path(c(
+  Sys.getenv("PAIRWISE70_DATA_DIR", unset = ""),
+  file.path(dirname(PROJECT_ROOT), "Projects", "mahmood789", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Projects", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Models", "Pairwise70", "data"),
+  file.path(dirname(PROJECT_ROOT), "Pairwise70", "data")
+))
+if (is.null(pairwise_dir)) {
+  stop("Pairwise70 data directory not found. Set PAIRWISE70_DATA_DIR to run validation.")
+}
 
 # Read Python DL results (DL/Wald/none/no-LOO)
-specs <- read.csv("C:/FragilityAtlas/data/output/fragility_atlas_specifications.csv",
+specs <- read.csv(file.path(OUTPUT_DIR, "fragility_atlas_specifications.csv"),
                    stringsAsFactors = FALSE, fileEncoding = "UTF-8")
 
 # Also read results for analysis selection info
-results <- read.csv("C:/FragilityAtlas/data/output/fragility_atlas_results.csv",
+results <- read.csv(file.path(OUTPUT_DIR, "fragility_atlas_results.csv"),
                      stringsAsFactors = FALSE, fileEncoding = "UTF-8")
 
 # Get Python DL/Wald/none/no-LOO specs
@@ -166,6 +196,6 @@ cat(sprintf("  Pass rate: %.1f%%\n", 100 * pass_count / max(1, pass_count + fail
 
 if (length(validation_rows) > 0) {
   out <- do.call(rbind, validation_rows)
-  write.csv(out, "C:/FragilityAtlas/data/output/r_crossvalidation_proper.csv", row.names = FALSE)
+  write.csv(out, file.path(OUTPUT_DIR, "r_crossvalidation_proper.csv"), row.names = FALSE)
   cat("  Saved to data/output/r_crossvalidation_proper.csv\n")
 }
