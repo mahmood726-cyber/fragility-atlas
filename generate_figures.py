@@ -9,7 +9,8 @@ import json
 import os
 import sys
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+if "pytest" not in sys.modules:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 import matplotlib
 
