@@ -77,6 +77,20 @@ class TestTrimAndFill:
         # The k in the result may be larger (imputed studies added)
         assert r_tf.k >= len(yi)
 
+    def test_l0_imputes_expected_count(self):
+        """Regression for the Duval-Tweedie L0 denominator.
+
+        The L0 estimator is k0 = (4*S - k*(k+1)) / (2k - 1) (metafor's trimfill
+        L0). An earlier bug used (2k + 1), which under-imputes k0. For this
+        asymmetric k=4 dataset the correct L0 imputes exactly one missing study
+        (final k = 5); the buggy (2k + 1) denominator imputes zero (final k = 4).
+        """
+        yi = np.array([-0.586, -0.473, 0.586, -0.664])
+        sei = np.array([0.2, 0.2, 0.2, 0.2])
+        r_tf = trim_and_fill(yi, sei, 'DL', 'Wald')
+        # 4 original + 1 imputed. Buggy (2k+1) denominator would give 4.
+        assert r_tf.k == 5, f"expected 1 imputed study (k=5), got k={r_tf.k}"
+
 
 class TestPetPeese:
     def test_returns_meta_result(self):
@@ -97,6 +111,24 @@ class TestPetPeese:
         ci_width = r.ci_hi - r.ci_lo
         # With k=7, df=5, t(0.975,5)=2.571 vs z=1.96 → ~31% wider
         assert ci_width > 0  # at minimum, CI should exist
+
+    def test_switches_to_peese_when_pet_significant(self):
+        """When PET intercept is significant (p<0.05), the PEESE branch is used.
+
+        Strong small-study effect: larger effects in the less precise (larger
+        sei) studies. PET rejects the null, so pet_peese must report the PEESE
+        (regression-on-sei²) intercept, not the PET intercept.
+        """
+        yi = np.array([0.9, 0.7, 0.55, 0.35, 0.25, 0.15, 0.08])
+        sei = np.array([0.45, 0.38, 0.30, 0.22, 0.16, 0.11, 0.07])
+        wi = 1.0 / sei**2
+        df = max(1, len(yi) - 2)
+        pet_intercept, _, pet_p = _weighted_regression(yi, sei, wi, df, use_se_squared=False)
+        peese_intercept, _, _ = _weighted_regression(yi, sei, wi, df, use_se_squared=True)
+        assert pet_p < 0.05, "test data must make PET significant to exercise PEESE branch"
+        r = pet_peese(yi, sei, 'DL', 'Wald')
+        assert math.isclose(r.theta, peese_intercept, rel_tol=1e-9)
+        assert not math.isclose(r.theta, pet_intercept, rel_tol=1e-6)
 
 
 class TestWeightedRegression:

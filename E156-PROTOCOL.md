@@ -10,7 +10,7 @@
 **Date Last Updated**: 2026-04-07
 **Status**: DRAFT
 
-**Dashboard**: [https://mahmood726-cyber.github.io/fragilityatlas/](https://mahmood726-cyber.github.io/fragilityatlas/)
+**Dashboard**: [https://mahmood726-cyber.github.io/fragility-atlas/](https://mahmood726-cyber.github.io/fragility-atlas/)
 
 ## E156 Abstract (CURRENT BODY)
 

@@ -51,7 +51,10 @@ def trim_and_fill(yi: np.ndarray, sei: np.ndarray, estimator: str = 'DL',
         else:
             S = np.sum(np.abs(signed_ranks[signed_ranks < 0]))
 
-        k0_est = max(0, round((4 * S - k * (k + 1)) / (2 * k + 1)))
+        # Duval-Tweedie (2000) L0 estimator; denominator is (2k - 1) to match
+        # metafor's trimfill L0. (An earlier version used (2k + 1), which
+        # systematically under-imputed the number of missing studies k0.)
+        k0_est = max(0, round((4 * S - k * (k + 1)) / (2 * k - 1)))
 
         if k0_est == 0:
             break
