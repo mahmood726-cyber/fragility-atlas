@@ -1,3 +1,5 @@
+> **Correction, 8 October 2026:** This is a historical report. Its description of HS and SJ discrepancies as valid specification variability was incorrect. HS, HE and SJ formulas have since been corrected; REML has gained a profile-likelihood fallback for failed iterations. See [current numerical validation](../../docs/numerical_validation_2026-10-08.md). The checks recorded below were not rerun in R in this session.
+
 # Fragility Atlas — R Cross-Validation Report
 
 **Date:** 2026-03-25
