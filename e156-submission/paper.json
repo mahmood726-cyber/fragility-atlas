@@ -43,8 +43,8 @@
     "doi": "",
     "version": "1.0",
     "date": "2026-03-26",
-    "certainty": "high",
-    "validation": "DRAFT"
+    "certainty": "unassessed",
+    "validation": "SUPERSEDED: numerical corrections 2026-10-08; historical publication snapshot, not revalidated"
   },
   "type": "methods",
   "primary_estimand": "Robustness score (percent agreement across specifications)",

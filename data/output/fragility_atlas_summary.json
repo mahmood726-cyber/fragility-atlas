@@ -1,0 +1,36 @@
+{
+  "n_reviews": 473,
+  "classification_counts": {
+    "Robust": 98,
+    "Moderate": 103,
+    "Fragile": 167,
+    "Unstable": 105,
+    "Insufficient": 0
+  },
+  "robustness_distribution": {
+    "mean": 66.56,
+    "median": 66.67,
+    "q25": 53.27,
+    "q75": 86.03,
+    "min": 6.93,
+    "max": 100.0
+  },
+  "k_distribution": {
+    "mean": 14.8,
+    "median": 8,
+    "min": 3,
+    "max": 180
+  },
+  "eta2_means": {
+    "estimator": 0.0403,
+    "ci_method": 0.0337,
+    "bias_correction": 0.362,
+    "leave_out": 0.1505
+  },
+  "scale_counts": {
+    "ratio": 429,
+    "difference": 44
+  },
+  "total_specifications": 469350,
+  "elapsed_seconds": 108.9
+}
