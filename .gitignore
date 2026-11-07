@@ -14,3 +14,8 @@ sentinel-findings.md
 sentinel-findings.jsonl
 review-findings.md
 review-findings.jsonl
+
+# Keep the compact corrected results and provenance under version control.
+!data/output/fragility_atlas_results.csv
+!data/output/fragility_atlas_summary.json
+!data/output/run_provenance.json

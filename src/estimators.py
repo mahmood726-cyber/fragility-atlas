@@ -109,7 +109,14 @@ def _dl_tau2(yi, wi, k):
 
 
 def _reml_tau2(yi, sei, k, max_iter=100, tol=1e-8):
-    """Restricted Maximum Likelihood via Fisher scoring (Viechtbauer 2005)."""
+    """REML via Fisher scoring, with a profile-likelihood fallback.
+
+    An exhausted iteration is not a valid fitted estimate. Highly unequal
+    sampling variances can cause oscillation, so optimise the same restricted
+    likelihood instead of returning the final unconverged iterate.
+    """
+    if k < 2:
+        return 0.0
     vi = sei ** 2
     # Initial estimate: DL
     wi = 1.0 / vi
@@ -134,7 +141,7 @@ def _reml_tau2(yi, sei, k, max_iter=100, tol=1e-8):
                              + (np.sum(wi_star ** 2) / np.sum(wi_star)) ** 2)
 
         if fisher_info <= 0:
-            break
+            return _reml_profile_tau2(yi, vi)
 
         tau2_new = tau2 + gradient / fisher_info
         tau2_new = max(0.0, tau2_new)
@@ -144,11 +151,44 @@ def _reml_tau2(yi, sei, k, max_iter=100, tol=1e-8):
             break
         tau2 = tau2_new
     else:
-        import sys
-        print(f"Warning: REML did not converge in {max_iter} iterations (tau2={tau2:.6f})",
-              file=sys.stderr)
+        return _reml_profile_tau2(yi, vi)
 
     return tau2
+
+
+def _reml_profile_tau2(yi, vi):
+    """Minimise restricted negative log likelihood, including the zero boundary.
+
+    Search local minima on a log-spaced grid because an unbalanced dataset
+    can have more than one stationary point. The range of the effects bounds
+    the residuals; beyond range² + max(vi), the REML score is negative.
+    """
+    from scipy.optimize import minimize_scalar
+
+    def negative_log_likelihood(tau2):
+        weights = 1.0 / (vi + tau2)
+        theta = np.sum(weights * yi) / np.sum(weights)
+        return float(0.5 * (np.sum(np.log(vi + tau2))
+                            + np.log(np.sum(weights))
+                            + np.sum(weights * (yi - theta) ** 2)))
+
+    upper = float(np.ptp(yi) ** 2 + np.max(vi))
+    lower = max(float(np.min(vi)) * 1e-8, np.finfo(float).tiny)
+    grid = np.concatenate(([0.0], np.geomspace(lower, upper, 64)))
+    values = [negative_log_likelihood(point) for point in grid]
+    candidates = [(values[0], 0.0)]
+    for index in range(1, len(grid) - 1):
+        if values[index] <= values[index - 1] and values[index] <= values[index + 1]:
+            fit = minimize_scalar(negative_log_likelihood,
+                                  bounds=(grid[index - 1], grid[index + 1]),
+                                  method='bounded',
+                                  options={'xatol': max(1e-14, upper * 1e-12)})
+            if not fit.success or not np.isfinite(fit.fun):
+                raise RuntimeError('REML profile-likelihood optimisation failed')
+            candidates.append((float(fit.fun), float(fit.x)))
+    # Grid candidates also protect against a shallow minimum at an endpoint.
+    candidates.extend(zip(values, map(float, grid)))
+    return min(candidates)[1]
 
 
 def _pm_tau2(yi, sei, k, max_iter=100, tol=1e-8):
@@ -184,47 +224,47 @@ def _pm_tau2(yi, sei, k, max_iter=100, tol=1e-8):
 
 
 def _sj_tau2(yi, sei, k):
-    """Sidik-Jonkman moment estimator (2005)."""
+    """Sidik-Jonkman estimator, matching metafor's default starting value.
+
+    tau2_0 is the population variance of the observed effects. The final
+    estimate is tau2_0 times the generalised residual Q divided by k-1;
+    subtracting k-1 from Q would instead apply a different moment update.
+    """
     if k < 2:
         return 0.0
     vi = sei ** 2
-    # Unweighted mean
     theta_uw = np.mean(yi)
-    # Initial tau2 from residuals
-    tau2_0 = np.sum((yi - theta_uw) ** 2) / (k - 1)
-
-    # One-step update
-    wi = 1.0 / (vi + tau2_0)
-    theta = np.sum(wi * yi) / np.sum(wi)
-    Q = float(np.sum(wi * (yi - theta) ** 2))
-    C = float(np.sum(wi) - np.sum(wi ** 2) / np.sum(wi))
-
-    if C <= 0:
-        return max(0.0, tau2_0)
-
-    return max(0.0, (Q - (k - 1)) / C)
+    tau2_0 = float(np.sum((yi - theta_uw) ** 2) / k)
+    # The limiting estimate is zero when all observed effects are identical.
+    if tau2_0 <= 0:
+        return 0.0
+    qi = tau2_0 / (vi + tau2_0)
+    theta = np.sum(qi * yi) / np.sum(qi)
+    return max(0.0, float(np.sum(qi * (yi - theta) ** 2) / (k - 1)))
 
 
 def _hs_tau2(yi, sei, k):
-    """Hunter-Schmidt variance components estimator."""
+    """Hunter-Schmidt estimator: max(0, (Q_FE - k) / sum(1/vi)).
+
+    This is metafor's HS convention for known sampling variances, without
+    the additional small-sample correction used by its separate HSk method.
+    """
     if k < 2:
         return 0.0
-    vi = sei ** 2
-    # Unweighted (sample-size weighted in original HS, but we use equal weights)
-    theta = np.mean(yi)
-    S2 = np.sum((yi - theta) ** 2) / (k - 1)
-    v_bar = np.mean(vi)
-    return max(0.0, S2 - v_bar)
+    wi = 1.0 / (sei ** 2)
+    theta = np.sum(wi * yi) / np.sum(wi)
+    q_fe = float(np.sum(wi * (yi - theta) ** 2))
+    return max(0.0, float((q_fe - k) / np.sum(wi)))
 
 
 def _he_tau2(yi, sei, k):
-    """Hedges unweighted estimator."""
+    """Hedges estimator: sample variance of yi minus mean sampling variance."""
     if k < 2:
         return 0.0
     vi = sei ** 2
     theta = np.mean(yi)
     Q_uw = np.sum((yi - theta) ** 2)
-    return max(0.0, (Q_uw - np.sum(vi)) / (k - 1))
+    return max(0.0, float(Q_uw / (k - 1) - np.mean(vi)))
 
 
 def _compute_ci(theta, se_theta, yi, sei, tau2, wi_star, k, alpha, ci_method):

@@ -1,3 +1,5 @@
+> **Historical March 2026 draft - superseded.** The HS/HE/SJ formulas and REML convergence handling were corrected on 8 October 2026. This document and its figures have not been scientifically revalidated. Use the current dashboard and [validation record](https://github.com/mahmood726-cyber/fragility-atlas/blob/master/docs/numerical_validation_2026-10-08.md) for the regenerated exploratory results.
+
 Mahmood Ahmad
 Tahir Heart Institute
 mahmood.ahmad2@nhs.net

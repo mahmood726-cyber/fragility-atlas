@@ -1,0 +1,26 @@
+{
+  "generated_utc": "2026-10-08T14:34:16.518666+00:00",
+  "atlas_base_commit": "687173a71e59cce0ebd461a69cf4158b7ad57512",
+  "pairwise70_commit": "fb03b7b72aa25fa58efd0fbbf14945bd62848a11",
+  "input_file_count": 595,
+  "input_manifest_sha256": "a7b2e2b9dae3957b1297ee66dc12e4136c00da7d27b8e3cd001da5ae98e2a5fe",
+  "source_sha256": {
+    "src/__init__.py": "fe9fcbad720efa322dc2d1a6d3305f20c05c9bae41650e8486b45828e900c6e7",
+    "src/classifier.py": "f2fb41a91f8afe8a37326cd6e18cbd4832afa5832ad58c1fbbec2541c663041a",
+    "src/corrections.py": "50ab1a9fbd48983150a68f376c53d69734f2c6bddeddf75bf1ca7dc2dde12e31",
+    "src/embed_dashboard_data.py": "c750b38b6865cf451420737f87c9eca2efb3e1cfdf7f9b3f1181c2f68d9a820f",
+    "src/estimators.py": "82dbba6935011523d8c24c1388191963ba88194c9f1b3533e63aec7e90c6a1d6",
+    "src/loader.py": "b7687b8d83be1d190bbba146e99c57f7e52eebbb9e236cc99a624120e73948ee",
+    "src/pipeline.py": "d64808c15a6e8601e64df5e315dbf511e790797887475ce90e8dc49d2d67fe94",
+    "src/populate_manuscript.py": "8a52d669de59608fc6e3db90ea577db5c4493cb4ba66d5c2269068d7994768b5",
+    "src/specifications.py": "37ed5a7e1ef57d813e70c76cbb57342b011bdf7c72ed26c6f97cd0edf6235cf1",
+    "src/utils.py": "9c7cb70e031ea05cab004190049f43412398abb5daec99ae18e6b67140813d34"
+  },
+  "output_sha256": {
+    "fragility_atlas_results.csv": "5642f3c8677e66947818ed8f4ae4100f7f52fc10b84c3865f1ae93a8533ed7ab",
+    "fragility_atlas_specifications.csv": "faabf4a1833da778385de377cbbbb147b182cf1fbf3ff7826e8c41132ce97808",
+    "fragility_atlas_summary.json": "63053b5c6fc75828674c6e48495307b7641c9c476c0fb7b6d60bd296d313be24"
+  },
+  "command": "python -m src.pipeline --pairwise-dir ../Pairwise70/data --output-dir data/output --workers 6",
+  "note": "The March dashboard used 403 eligible reviews. This fresh dataset/loader run includes 473; differences from March cannot be attributed solely to the estimator corrections."
+}

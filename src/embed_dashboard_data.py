@@ -2,11 +2,43 @@
 
 import csv
 import json
+import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = REPO_ROOT / 'data' / 'output'
 DEFAULT_DASHBOARD_PATH = REPO_ROOT / 'dashboard' / 'index.html'
+
+
+def _replace_variable(html, name, value):
+    """Replace one JS assignment without treating quoted brackets as syntax."""
+    match = re.search(r'(?:const|var)\s+' + re.escape(name) + r'\s*=\s*', html)
+    if not match:
+        raise ValueError(f'Dashboard variable missing: {name}')
+    depth = 0
+    quote = None
+    escaped = False
+    for pos in range(match.end(), len(html)):
+        char = html[pos]
+        if quote:
+            if escaped:
+                escaped = False
+            elif char == '\\':
+                escaped = True
+            elif char == quote:
+                quote = None
+        elif char in ('"', "'"):
+            quote = char
+        elif char in '{[(':
+            depth += 1
+        elif char in '}])':
+            depth -= 1
+        elif char == ';' and depth == 0:
+            # Prevent data strings from terminating an inline script element.
+            encoded = json.dumps(value, ensure_ascii=True).replace('<', '\\u003c')
+            return html[:match.start()] + f'var {name} = {encoded};' + html[pos + 1:]
+    raise ValueError(f'Dashboard assignment is unterminated: {name}')
+
 
 def embed(output_dir: str | Path = DEFAULT_OUTPUT_DIR,
           dashboard_path: str | Path = DEFAULT_DASHBOARD_PATH):
@@ -34,53 +66,43 @@ def embed(output_dir: str | Path = DEFAULT_OUTPUT_DIR,
             row['cochrane_direction'] = int(row['cochrane_direction'])
             reviews.append(row)
 
-    # Generate JS data
-    summary_js = json.dumps(summary, indent=2)
-    reviews_js = json.dumps(reviews, indent=None)  # compact for size
+    # Keep the dashboard's display schema in sync with the pipeline's export
+    # schema. Dumping the raw summary used to leave the UI fields undefined.
+    counts = summary['classification_counts']
+    n_reviews = summary['n_reviews']
+    display_summary = {
+        **summary,
+        'total_reviews': n_reviews,
+        'mean_robustness': summary['robustness_distribution']['mean'],
+        'pct_fragile_unstable': round(
+            100 * (counts['Fragile'] + counts['Unstable']) / n_reviews, 1
+        ) if n_reviews else 0.0,
+        'counts': counts,
+        'mean_eta': {
+            'Estimator': summary['eta2_means']['estimator'],
+            'CI Method': summary['eta2_means']['ci_method'],
+            'Bias Correction': summary['eta2_means']['bias_correction'],
+            'Leave-One-Out': summary['eta2_means']['leave_out'],
+        },
+    }
+    if len(reviews) != n_reviews:
+        raise ValueError('Review count does not match summary; refusing partial refresh')
 
     # Read dashboard HTML
     dashboard = Path(dashboard_path)
     html = dashboard.read_text(encoding='utf-8')
 
-    # Find and replace data blocks using string search (not regex — avoids backslash issues)
-    import re
-
-    # Replace SUMMARY_DATA
-    match = re.search(r'(?:const|var)\s+SUMMARY_DATA\s*=\s*', html)
-    if match:
-        start = match.start()
-        # Find the matching closing brace + semicolon
-        brace_start = html.index('{', match.end())
-        depth = 0
-        pos = brace_start
-        while pos < len(html):
-            if html[pos] == '{':
-                depth += 1
-            elif html[pos] == '}':
-                depth -= 1
-                if depth == 0:
-                    end = html.index(';', pos) + 1
-                    html = html[:start] + f'var SUMMARY_DATA = {summary_js};' + html[end:]
-                    break
-            pos += 1
-
-    # Replace REVIEWS_DATA
-    match = re.search(r'(?:const|var)\s+REVIEWS_DATA\s*=\s*', html)
-    if match:
-        start = match.start()
-        bracket_start = html.index('[', match.end())
-        depth = 0
-        pos = bracket_start
-        while pos < len(html):
-            if html[pos] == '[':
-                depth += 1
-            elif html[pos] == ']':
-                depth -= 1
-                if depth == 0:
-                    end = html.index(';', pos) + 1
-                    html = html[:start] + f'var REVIEWS_DATA = {reviews_js};' + html[end:]
-                    break
-            pos += 1
+    assignments = {
+        'SUMMARY_DATA': display_summary,
+        'REVIEWS_DATA': reviews,
+        'TOTAL_REVIEWS': n_reviews,
+        'counts': counts,
+        'meanRobustness': display_summary['mean_robustness'],
+        'pctFragileUnstable': display_summary['pct_fragile_unstable'],
+        'totalSpecs': summary['total_specifications'],
+    }
+    for name, value in assignments.items():
+        html = _replace_variable(html, name, value)
 
     dashboard.write_text(html, encoding='utf-8')
     print(f"Dashboard data embedded: {len(reviews)} reviews, summary with {summary['total_specifications']:,} specs")

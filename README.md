@@ -2,7 +2,11 @@
 
 [![ci](https://github.com/mahmood726-cyber/fragility-atlas/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mahmood726-cyber/fragility-atlas/actions/workflows/ci.yml) [![codeql](https://github.com/mahmood726-cyber/fragility-atlas/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/mahmood726-cyber/fragility-atlas/actions/workflows/codeql.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![python: 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 
-How robust are Cochrane meta-analysis conclusions when analysts make different but equally reasonable methodological choices? We applied multiverse analysis to 403 Cochrane systematic reviews from the Pairwise70 dataset, encompassing 394,569 individual meta-analytic specifications across five analytical dimensions. Each review was re-analysed across seven variance estimators, three confidence interval methods, three publication bias corrections, and leave-one-out subsets, then classified by agreement with the standard DerSimonian-Laird reference conclusion. The mean robustness score was 66.4 percent (median 66.7 percent, IQR 56.5 to 87.2 percent), with 58 percent of all reviews classified as Fragile or Unstable. Publication bias correction was the single most influential dimension, explaining ten times more variance (eta-squared 0.374) than variance estimator choice (eta-squared 0.036). These findings suggest that most Cochrane conclusions are substantially sensitive to defensible analytical alternatives, particularly the decision whether to adjust for publication bias. This analysis is limited to binary agreement classification and cannot capture the magnitude of effect size changes across specifications.
+Fragility Atlas explores how pooled estimates and significance decisions vary across seven variance estimators, three interval methods, three bias-sensitivity options and leave-one-out subsets. It compares specifications with an internally recomputed DerSimonian-Laird/Wald reference, not with a review's published conclusion.
+
+**Numerical correction (8 October 2026):** HS, HE and SJ implementation errors are fixed, and REML now uses a profile-likelihood fallback when Fisher scoring does not converge. External reference and real-review regression checks are documented in [the validation record](docs/numerical_validation_2026-10-08.md). Test failures now fail CI.
+
+The regenerated exploratory run contains 473 eligible reviews and 469,350 specifications. The March manuscript and micro-paper use a different 403-review snapshot and are superseded pending scientific revalidation. Automatic outcome selection, scale detection, the specification grid and agreement thresholds require expert review before research or clinical reuse.
 
 **Live dashboard:** <https://mahmood726-cyber.github.io/fragility-atlas/>
 
@@ -23,7 +27,7 @@ python -m http.server 8000
 python -m pytest -q
 ```
 
-The suite under `tests/` includes 3 test file(s).
+The suite includes external estimator references, real-review REML regressions and dashboard refresh checks. Set `PAIRWISE70_DATA_DIR` to include the real-data loader test.
 
 ## Repo layout
 
