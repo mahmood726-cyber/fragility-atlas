@@ -1,5 +1,5 @@
 numpy>=2.4.6
 scipy>=1.17.1
 pandas>=3.0.3
-pyreadr>=0.5.6
+pyreadr>=0.5.9
 pytest>=9.0.3
